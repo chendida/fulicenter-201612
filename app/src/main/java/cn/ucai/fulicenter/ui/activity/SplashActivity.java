@@ -56,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    tvTime.setText(1 + "");
+                   tvTime.setText(1 + "");
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     SplashActivity.this.finish();
                 }

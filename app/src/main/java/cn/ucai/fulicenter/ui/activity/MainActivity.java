@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         bind = ButterKnife.bind(this);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment,new NewGoodsFragment())
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override
