@@ -26,6 +26,7 @@ import cn.ucai.fulicenter.model.utils.ConvertUtils;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.model.utils.OkHttpUtils;
 import cn.ucai.fulicenter.ui.adapter.NewGoodsAdapter;
+import cn.ucai.fulicenter.ui.view.SpaceItemDecoration;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +64,8 @@ public class NewGoodsFragment extends Fragment {
 
         mAdapter = new NewGoodsAdapter(getContext(),mList);
         rvNewGoods.setAdapter(mAdapter);
+
+        rvNewGoods.addItemDecoration(new SpaceItemDecoration(24));
     }
 
     private void initData() {
