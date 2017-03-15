@@ -12,7 +12,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back"
+            android:layout_weight="1"
             />
+        <ImageView
+            android:id="@+id/ivShape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/bg_share_nor"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.05" />
 
     </LinearLayout>
 
