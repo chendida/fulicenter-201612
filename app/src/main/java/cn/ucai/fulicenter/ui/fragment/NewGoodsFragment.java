@@ -24,8 +24,8 @@ import cn.ucai.fulicenter.model.bean.NewGoodsBean;
 import cn.ucai.fulicenter.model.net.INewGoodsModel;
 import cn.ucai.fulicenter.model.net.NewGoodsModel;
 import cn.ucai.fulicenter.model.net.OnCompleteListener;
+import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.ConvertUtils;
-import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.ui.adapter.NewGoodsAdapter;
 import cn.ucai.fulicenter.ui.view.SpaceItemDecoration;
@@ -48,7 +48,6 @@ public class NewGoodsFragment extends Fragment {
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class NewGoodsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         model = new NewGoodsModel();
         initView();
-        initData(pageId,I.ACTION_DOWNLOAD);
+        initData(I.ACTION_DOWNLOAD);
         setListener();
     }
 
@@ -70,11 +69,10 @@ public class NewGoodsFragment extends Fragment {
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ImageLoader.release();
-                tvFresh.setVisibility(View.VISIBLE);
-                srl.setRefreshing(true);
+                //ImageLoader.release();
+                setRefresh(true);
                 pageId = 1;
-                initData(pageId,I.ACTION_PULL_DOWN);
+                initData(I.ACTION_PULL_DOWN);
             }
         });
 
@@ -84,16 +82,30 @@ public class NewGoodsFragment extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastPosition = gm.findLastVisibleItemPosition();
                 if (mAdapter.isMore() && RecyclerView.SCROLL_STATE_IDLE == newState
-                        && lastPosition == mAdapter.getItemCount() -1){
-                    pageId ++;
-                    initData(pageId,I.ACTION_PULL_UP);
+                        && lastPosition == mAdapter.getItemCount() - 1) {
+                    pageId++;
+                    initData(I.ACTION_PULL_UP);
                 }
             }
         });
     }
 
     private void initView() {
+        srl.setColorSchemeColors(
+                getResources().getColor(R.color.google_blue),
+                getResources().getColor(R.color.google_green),
+                getResources().getColor(R.color.google_red),
+                getResources().getColor(R.color.google_yellow));
         gm = new GridLayoutManager(getContext(), I.COLUM_NUM);
+        gm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == mList.size()) {
+                    return I.COLUM_NUM;
+                }
+                return 1;
+            }
+        });
         rvNewGoods.setLayoutManager(gm);
         rvNewGoods.setHasFixedSize(true);
 
@@ -103,40 +115,39 @@ public class NewGoodsFragment extends Fragment {
         rvNewGoods.addItemDecoration(new SpaceItemDecoration(24));
     }
 
-    private void initData(int pageId, final int action) {
+    private void initData(final int action) {
         model.loadData(getContext(), pageId, new OnCompleteListener<NewGoodsBean[]>() {
             @Override
             public void onSuccess(NewGoodsBean[] result) {
+                setRefresh(false);
+                mAdapter.setIsMore(true);
                 L.e(TAG, "initData,result = " + result);
-                mAdapter.setIsMore(result != null && result.length > 0);
-                if (!mAdapter.isMore()){
-                    if (action == I.ACTION_PULL_UP){
-                        mAdapter.setFooterText("没有更多数据");
+                if (result != null && result.length > 0) {
+                    ArrayList<NewGoodsBean> list = ConvertUtils.array2List(result);
+                    if (action == I.ACTION_PULL_DOWN || action == I.ACTION_DOWNLOAD) {
+                        mList.clear();
                     }
-                    return;
+                    mList.addAll(list);
+                    if (list.size() < I.PAGE_SIZE_DEFAULT){
+                        mAdapter.setIsMore(false);
+                    }
+                    mAdapter.notifyDataSetChanged();
                 }
 
-                ArrayList<NewGoodsBean> list = ConvertUtils.array2List(result);
-                switch (action){
-                    case I.ACTION_DOWNLOAD:
-                        mAdapter.initGoods(list);
-                        break;
-                    case I.ACTION_PULL_DOWN:
-                        mAdapter.initGoods(list);
-                        srl.setRefreshing(false);
-                        tvFresh.setVisibility(View.GONE);
-                        mAdapter.setFooterText("加载更多");
-                        break;
-                    case I.ACTION_PULL_UP:
-                        mAdapter.addGoods(list);
-                        break;
-                }
             }
+
             @Override
             public void onError(String error) {
                 L.e(TAG, "initData,error = " + error);
+                CommonUtils.showShortToast(error);
+                setRefresh(false);
             }
         });
+    }
+
+    private void setRefresh(boolean refresh) {
+        srl.setRefreshing(refresh);
+        tvFresh.setVisibility(refresh?View.VISIBLE:View.GONE);
     }
 
     @Override
