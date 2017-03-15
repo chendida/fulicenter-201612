@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.model.bean.NewGoodsBean;
+import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.model.utils.L;
 
 /**
@@ -37,20 +38,19 @@ public class NewGoodsAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        /*View view = View.inflate(mContext, R.layout.new_goods_info, null);
-        NewGoodsHolder holder = new NewGoodsHolder(view);*/
-        View inflate = LayoutInflater.from(mContext).inflate(R.layout.new_goods_info, parent, false);
-       return new NewGoodsHolder(inflate);
-//        return holder;
+        View view = View.inflate(mContext, R.layout.new_goods_info, null);
+        NewGoodsHolder holder = new NewGoodsHolder(view);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder parentHolder, int position) {
         NewGoodsBean goods = mList.get(position);
         NewGoodsHolder holder = (NewGoodsHolder) parentHolder;
-        L.e("leary", goods.toString());
         holder.tvGoodsName.setText(goods.getGoodsName());
         holder.tvGoodsPrice.setText(goods.getCurrencyPrice());
+
+        ImageLoader.downloadImg(mContext,holder.ivAvatar,goods.getGoodsThumb());
     }
 
     @Override

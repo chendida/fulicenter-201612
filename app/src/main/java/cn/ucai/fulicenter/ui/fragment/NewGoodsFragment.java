@@ -40,11 +40,6 @@ public class NewGoodsFragment extends Fragment {
     GridLayoutManager gm;
     NewGoodsAdapter mAdapter;
     List<NewGoodsBean>mList = new ArrayList<>();
-    public NewGoodsFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,9 +52,8 @@ public class NewGoodsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         model = new NewGoodsModel();
-        //initView();
-        initData();
         initView();
+        initData();
     }
 
     private void initView() {
@@ -77,12 +71,8 @@ public class NewGoodsFragment extends Fragment {
             public void onSuccess(NewGoodsBean[] result) {
                 L.e(TAG,"initData,result = " + result);
                 if (result != null && result.length > 0){
-//                    OkHttpUtils<NewGoodsBean[]>utils = new OkHttpUtils<NewGoodsBean[]>(getContext());
-//                    List<NewGoodsBean>list = utils.array2List(result);
                     ArrayList<NewGoodsBean> list = ConvertUtils.array2List(result);
-//                    L.e("leary",list.toString());
                     mAdapter.addGoods(list);
-
                 }
             }
 

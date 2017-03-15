@@ -4,9 +4,6 @@ package cn.ucai.fulicenter.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
@@ -56,7 +53,7 @@ public class SplashActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                   tvTime.setText(1 + "");
+                    tvTime.setText(1 + "");
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     SplashActivity.this.finish();
                 }
