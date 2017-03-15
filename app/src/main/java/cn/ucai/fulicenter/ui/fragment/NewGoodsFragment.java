@@ -132,7 +132,6 @@ public class NewGoodsFragment extends Fragment {
                         break;
                 }
             }
-
             @Override
             public void onError(String error) {
                 L.e(TAG, "initData,error = " + error);

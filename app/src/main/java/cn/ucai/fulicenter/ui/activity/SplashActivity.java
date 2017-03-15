@@ -4,6 +4,7 @@ package cn.ucai.fulicenter.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,34 +32,30 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (btnOnClick.isEnabled()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    tvTime.setText(3 + "");
-                }
-            }, 1000);
-        }
-        if (btnOnClick.isEnabled()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    tvTime.setText(2 + "");
-                }
-            }, 2000);
-        }
-        if (btnOnClick.isEnabled()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    tvTime.setText(1 + "");
+    protected void onStart() {
+        super.onStart();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = time/1000; i > 0 ; i--){
+                            final int tv_time = i;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tvTime.setText(tv_time +"");
+                                }
+                            });
+                            SystemClock.sleep(1000);
+                        }
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     SplashActivity.this.finish();
-                }
-            }, 3000);
-        }
+                    }
+                }).start();
+            }
+        },time);
     }
 
     @OnClick(R.id.btnOnClick)
