@@ -47,7 +47,7 @@ public class NewGoodsFragment extends Fragment {
     TextView tvFresh;
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
-
+    int catId = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,6 +60,7 @@ public class NewGoodsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         model = new NewGoodsModel();
+        catId = getActivity().getIntent().getIntExtra(I.NewAndBoutiqueGoods.CAT_ID, catId);
         initView();
         initData(I.ACTION_DOWNLOAD);
         setListener();
@@ -69,7 +70,6 @@ public class NewGoodsFragment extends Fragment {
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //ImageLoader.release();
                 setRefresh(true);
                 pageId = 1;
                 initData(I.ACTION_PULL_DOWN);
@@ -109,14 +109,14 @@ public class NewGoodsFragment extends Fragment {
         rvNewGoods.setLayoutManager(gm);
         rvNewGoods.setHasFixedSize(true);
 
-        mAdapter = new NewGoodsAdapter(getContext(), mList);
+        mAdapter = new NewGoodsAdapter(getActivity(), mList);
         rvNewGoods.setAdapter(mAdapter);
 
         rvNewGoods.addItemDecoration(new SpaceItemDecoration(24));
     }
 
     private void initData(final int action) {
-        model.loadData(getContext(), pageId, new OnCompleteListener<NewGoodsBean[]>() {
+        model.loadData(getContext(),catId,pageId, new OnCompleteListener<NewGoodsBean[]>() {
             @Override
             public void onSuccess(NewGoodsBean[] result) {
                 setRefresh(false);

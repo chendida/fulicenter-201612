@@ -1,7 +1,9 @@
 package cn.ucai.fulicenter.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,6 +21,7 @@ import cn.ucai.fulicenter.model.bean.BoutiqueBean;
 import cn.ucai.fulicenter.model.net.BoutiqueChildModel;
 import cn.ucai.fulicenter.model.net.IBoutiqueChildModel;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
+import cn.ucai.fulicenter.ui.activity.BoutiqueChildActivity;
 
 /**
  * Created by Administrator on 2017/3/15.
@@ -45,13 +48,23 @@ public class BoutiqueAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder parentHolder, int position) {
-        BoutiqueBean goods = mList.get(position);
+        final BoutiqueBean goods = mList.get(position);
         BoutiqueHolder holder = (BoutiqueHolder) parentHolder;
 
         ImageLoader.downloadImg(mContext, holder.ivBoutiqueImg, goods.getImageurl());
         holder.tvBoutiqueTitle.setText(goods.getTitle());
         holder.tvBoutiqueName.setText(goods.getName());
         holder.tvBoutiqueDescription.setText(goods.getDescription());
+
+        //设置点击跳转到二级页面
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, BoutiqueChildActivity.class);
+                intent.putExtra(I.NewAndBoutiqueGoods.CAT_ID,goods.getId());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override

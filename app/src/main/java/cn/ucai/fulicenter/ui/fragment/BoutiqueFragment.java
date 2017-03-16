@@ -108,7 +108,6 @@ public class BoutiqueFragment extends Fragment {
                     mList.addAll(list);
                     mAdapter.notifyDataSetChanged();
                 }
-
             }
 
             @Override

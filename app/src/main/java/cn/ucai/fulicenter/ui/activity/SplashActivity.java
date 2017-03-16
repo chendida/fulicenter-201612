@@ -17,7 +17,7 @@ import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
 
 public class SplashActivity extends AppCompatActivity {
-    int time = 3000;
+    int time = 1000;
     @BindView(R.id.tvTime)
     TextView tvTime;
     @BindView(R.id.btnOnClick)
@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = time/1000; i > 0 ; i--){
+                        for (int i = 3; i > 0 ; i--){
                             final int tv_time = i;
                             runOnUiThread(new Runnable() {
                                 @Override
