@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class CategoryGroupFragment extends Fragment {
     ICategoryModel model;
 
     List<CategoryGroupBean> mGroupList;
-    List<CategoryChildBean> mChildList;
+    List<List<CategoryChildBean>> mChildList;
     CategoryAdapter mAdapter;
     public CategoryGroupFragment() {
         // Required empty public constructor
@@ -60,7 +61,15 @@ public class CategoryGroupFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         model = new CategoryModel();
+        initView();
         initData();
+    }
+
+    private void initView() {
+        mGroupList = new ArrayList<>();
+        mChildList = new ArrayList<>();
+        mAdapter = new CategoryAdapter(getContext(),mGroupList,mChildList);
+        elvCategory.setAdapter(mAdapter);
     }
 
     private void initData() {
@@ -100,10 +109,11 @@ public class CategoryGroupFragment extends Fragment {
         List<CategoryGroupBean> groupList;
         List<List<CategoryChildBean>> childList;
 
-        public CategoryAdapter(Context context) {
+        public CategoryAdapter(Context context, List<CategoryGroupBean> groupList,
+                               List<List<CategoryChildBean>> childList) {
             this.context = context;
-            this.groupList = new ArrayList<>();
-            this.childList = new ArrayList<>();
+            this.groupList = groupList;
+            this.childList = childList;
         }
 
         @Override
@@ -156,10 +166,10 @@ public class CategoryGroupFragment extends Fragment {
             ImageLoader.downloadImg(context, holder.ivGroup, getGroup(groupPosition).getImageUrl());
             holder.tvCategoryName.setText(getGroup(groupPosition).getName());
             if (isExpanded) {
-                holder.ivExpand.setImageResource(R.drawable.arrow2_up);
-                loadChildData(getGroup(groupPosition).getId());
-            } else {
                 holder.ivExpand.setImageResource(R.drawable.arrow2_down);
+                loadChildData(getGroup(groupPosition).getId(),groupPosition);
+            } else {
+                holder.ivExpand.setImageResource(R.drawable.arrow2_up);
             }
             return convertView;
         }
@@ -211,14 +221,15 @@ public class CategoryGroupFragment extends Fragment {
         }
     }
 
-    private void loadChildData(int parentId) {
+    private void loadChildData(int parentId, final int groupPosition) {
         model.loadChildData(getContext(), parentId, new OnCompleteListener<CategoryChildBean[]>() {
             @Override
             public void onSuccess(CategoryChildBean[] result) {
                 if (result != null && result.length > 0){
-                    L.e(TAG, "initData,result = " + result);
                     ArrayList<CategoryChildBean>list = ConvertUtils.array2List(result);
-                    mChildList.addAll(list);
+                    for (int i = 0;i < mGroupList.size(); i ++){
+                        mChildList.add(i,list);
+                    }
                 }
             }
 

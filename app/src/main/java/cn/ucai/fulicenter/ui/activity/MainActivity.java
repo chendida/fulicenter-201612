@@ -13,6 +13,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.ui.fragment.BoutiqueFragment;
+import cn.ucai.fulicenter.ui.fragment.CategoryGroupFragment;
 import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment[] mFragments;
     NewGoodsFragment mNewGoodsFragment;
     BoutiqueFragment mBoutiqueFragment;
+    CategoryGroupFragment mCategoryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +47,21 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, mNewGoodsFragment)
                 .add(R.id.fragment, mBoutiqueFragment)
+                .add(R.id.fragment,mCategoryFragment)
+                .hide(mCategoryFragment)
                 .hide(mBoutiqueFragment)
                 .show(mNewGoodsFragment)
                 .commit();
     }
 
     private void initFragment() {
-        mFragments = new Fragment[2];
+        mFragments = new Fragment[3];
         mBoutiqueFragment = new BoutiqueFragment();
         mNewGoodsFragment = new NewGoodsFragment();
+        mCategoryFragment = new CategoryGroupFragment();
         mFragments[0] = mNewGoodsFragment;
         mFragments[1] = mBoutiqueFragment;
+        mFragments[2] = mCategoryFragment;
     }
 
     @Override
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.rbNewGoods, R.id.rbBoutique})
+    @OnClick({R.id.rbNewGoods, R.id.rbBoutique,R.id.rbCategory})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rbNewGoods:
@@ -74,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.rbBoutique:
                 index = 1;
+                break;
+            case R.id.rbCategory:
+                index = 2;
                 break;
         }
         setFragment();
