@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.ui.view.MFGT;
 
 public class SplashActivity extends AppCompatActivity {
     int time = 1000;
@@ -50,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
                             });
                             SystemClock.sleep(1000);
                         }
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    MFGT.gotoMain(SplashActivity.this);
                     SplashActivity.this.finish();
                     }
                 }).start();
@@ -60,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnOnClick)
     public void onClick() {
-        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+        MFGT.gotoMain(SplashActivity.this);
         SplashActivity.this.finish();
     }
     @Override
