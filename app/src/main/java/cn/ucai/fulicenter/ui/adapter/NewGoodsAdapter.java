@@ -16,6 +16,7 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.NewGoodsBean;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
+import cn.ucai.fulicenter.ui.view.FooterHolder;
 
 /**
  * Created by Administrator on 2017/3/15.
@@ -64,7 +65,7 @@ public class NewGoodsAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder parentHolder, int position) {
         if (getItemViewType(position) == I.TYPE_FOOTER){
             FooterHolder holder = (FooterHolder) parentHolder;
-            holder.tvFooter.setText(getFooterString());
+            holder.setFooter(getFooterString());
             return;
         }
         NewGoodsBean goods = mList.get(position);
@@ -105,7 +106,7 @@ public class NewGoodsAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    static class NewGoodsHolder extends RecyclerView.ViewHolder {
+    class NewGoodsHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.ivAvatar)
         ImageView ivAvatar;
         @BindView(R.id.tvGoodsName)
@@ -114,16 +115,6 @@ public class NewGoodsAdapter extends RecyclerView.Adapter {
         TextView tvGoodsPrice;
 
         NewGoodsHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-    }
-
-    static class FooterHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.tvFooter)
-        TextView tvFooter;
-
-        FooterHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
