@@ -15,5 +15,5 @@ public interface INewGoodsModel {
      * @param pageId    分页的起始下标
      * @param listener  OkHttpUtils.OnCompleteListener<NewGoodsBean[]>的子接口</>
      */
-    void loadData(Context context,int pageId,OnCompleteListener<NewGoodsBean[]> listener);
+    void loadData(Context context,int catId,int pageId,OnCompleteListener<NewGoodsBean[]> listener);
 }
