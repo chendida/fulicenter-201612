@@ -66,7 +66,7 @@ public class BoutiqueFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         model = new BoutiqueModel();
         initView();
-        initData(I.ACTION_DOWNLOAD);
+        initData();
         setListener();
     }
 
@@ -74,23 +74,8 @@ public class BoutiqueFragment extends Fragment {
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //ImageLoader.release();
                 setRefresh(true);
-                pageId = 1;
-                initData(I.ACTION_PULL_DOWN);
-            }
-        });
-
-        rvNewGoods.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                int lastPosition = gm.findLastVisibleItemPosition();
-                if (mAdapter.isMore() && RecyclerView.SCROLL_STATE_IDLE == newState
-                        && lastPosition == mAdapter.getItemCount() - 1) {
-                    pageId++;
-                    initData(I.ACTION_PULL_UP);
-                }
+                initData();
             }
         });
     }
@@ -111,22 +96,16 @@ public class BoutiqueFragment extends Fragment {
         rvNewGoods.addItemDecoration(new SpaceItemDecoration(24));
     }
 
-    private void initData(final int action) {
+    private void initData() {
+        mList.clear();
         model.loadData(getContext(),new OnCompleteListener<BoutiqueBean[]>() {
             @Override
             public void onSuccess(BoutiqueBean[] result) {
                 setRefresh(false);
-                mAdapter.setIsMore(true);
                 L.e(TAG, "initData,result = " + result);
                 if (result != null && result.length > 0) {
                     ArrayList<BoutiqueBean> list = ConvertUtils.array2List(result);
-                    if (action == I.ACTION_PULL_DOWN || action == I.ACTION_DOWNLOAD) {
-                        mList.clear();
-                    }
                     mList.addAll(list);
-                    if (list.size() < I.PAGE_SIZE_DEFAULT){
-                        mAdapter.setIsMore(false);
-                    }
                     mAdapter.notifyDataSetChanged();
                 }
 
