@@ -17,6 +17,7 @@ import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.NewGoodsBean;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.ui.view.FooterHolder;
+import cn.ucai.fulicenter.ui.view.MFGT;
 
 /**
  * Created by Administrator on 2017/3/15.
@@ -68,12 +69,20 @@ public class NewGoodsAdapter extends RecyclerView.Adapter {
             holder.setFooter(getFooterString());
             return;
         }
-        NewGoodsBean goods = mList.get(position);
+        final NewGoodsBean goods = mList.get(position);
         NewGoodsHolder holder = (NewGoodsHolder) parentHolder;
         holder.tvGoodsName.setText(goods.getGoodsName());
         holder.tvGoodsPrice.setText(goods.getCurrencyPrice());
 
         ImageLoader.downloadImg(mContext, holder.ivAvatar, goods.getGoodsThumb());
+
+        //点击跳转到商品详情界面
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.gotoDetails(mContext,goods.getGoodsId());
+            }
+        });
     }
 
     private int getFooterString() {
