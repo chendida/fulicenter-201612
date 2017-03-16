@@ -61,7 +61,8 @@ public class BoutiqueAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, BoutiqueChildActivity.class);
-                intent.putExtra(I.NewAndBoutiqueGoods.CAT_ID,goods.getId());
+                intent.putExtra(I.NewAndBoutiqueGoods.CAT_ID,goods.getId())
+                .putExtra(I.Boutique.TITLE,goods.getTitle());
                 mContext.startActivity(intent);
             }
         });
