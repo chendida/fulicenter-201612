@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
+        android:layout_marginLeft="20dp"
         android:id="@+id/ivGroup"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -21,5 +22,6 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/arrow2_down"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        />
 </RelativeLayout>
