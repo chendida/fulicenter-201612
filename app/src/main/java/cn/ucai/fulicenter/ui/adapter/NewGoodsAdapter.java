@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,6 +34,44 @@ public class NewGoodsAdapter extends RecyclerView.Adapter {
     TextView tvGoodsName;
     @BindView(R.id.tvGoodsPrice)
     TextView tvGoodsPrice;
+
+
+    int softBy =  I.SORT_BY_ADDTIME_DESC;
+    public void setSoftBy(int softBy) {
+        this.softBy = softBy;
+        softBy();
+    }
+    /*
+    排序方法
+     */
+    private void softBy(){
+        Collections.sort(mList, new Comparator<NewGoodsBean>() {
+            @Override
+            public int compare(NewGoodsBean left, NewGoodsBean right) {
+                int result = 0;
+                switch (softBy){
+                    case I.SORT_BY_ADDTIME_DESC:
+                        result = (int) (left.getAddTime() - right.getAddTime());
+                        break;
+                    case I.SORT_BY_ADDTIME_ASC:
+                        result = (int) (right.getAddTime() - left.getAddTime());
+                        break;
+                    case I.SORT_BY_PRICE_DESC:
+                        result = getPrice(left.getCurrencyPrice()) - getPrice(right.getCurrencyPrice());
+                        break;
+                    case I.SORT_BY_PRICE_ASC:
+                        result = getPrice(right.getCurrencyPrice()) - getPrice(left.getCurrencyPrice());
+                        break;
+                }
+                return result;
+            }
+        });
+        notifyDataSetChanged();
+    }
+    private int getPrice(String p){
+        String price = p.substring(p.indexOf("￥") + 1);
+        return Integer.valueOf(price);
+    }
 
 
     boolean isMore;

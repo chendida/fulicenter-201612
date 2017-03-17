@@ -65,6 +65,7 @@ public class CategoryGroupFragment extends Fragment {
         mChildList = new ArrayList<>();
         mAdapter = new CategoryAdapter(getContext());
         elvCategory.setAdapter(mAdapter);
+        elvCategory.setGroupIndicator(null);
     }
 
     private void initData() {

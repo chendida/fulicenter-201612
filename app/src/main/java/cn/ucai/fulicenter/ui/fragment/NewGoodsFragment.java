@@ -146,8 +146,13 @@ public class NewGoodsFragment extends Fragment {
     }
 
     private void setRefresh(boolean refresh) {
-        srl.setRefreshing(refresh);
-        tvFresh.setVisibility(refresh?View.VISIBLE:View.GONE);
+        //防止数据加载失败出现空指针而加的保护判断
+        if (srl != null) {
+            srl.setRefreshing(refresh);
+        }
+        if (tvFresh != null) {
+            tvFresh.setVisibility(refresh ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -156,5 +161,9 @@ public class NewGoodsFragment extends Fragment {
         if (bind != null) {
             bind.unbind();
         }
+    }
+
+    public void softBy(int softBy) {
+        mAdapter.setSoftBy(softBy);
     }
 }
