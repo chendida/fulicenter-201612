@@ -8,6 +8,7 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.BoutiqueBean;
 import cn.ucai.fulicenter.ui.activity.BoutiqueChildActivity;
+import cn.ucai.fulicenter.ui.activity.CategoryChildPageActivity;
 import cn.ucai.fulicenter.ui.activity.GoodsDetailsActivity;
 import cn.ucai.fulicenter.ui.activity.MainActivity;
 import cn.ucai.fulicenter.ui.activity.SplashActivity;
@@ -43,5 +44,12 @@ public class MFGT {
     public static void gotoDetails(Context activity, int goodsId) {
         startActivity((Activity)activity,new Intent(activity,GoodsDetailsActivity.class)
         .putExtra(I.Goods.KEY_GOODS_ID,goodsId));
+    }
+
+
+    public static void gotoCategoryChild(Context context, int id, String name) {
+        startActivity((Activity) context,new Intent(context,CategoryChildPageActivity.class)
+                .putExtra(I.NewAndBoutiqueGoods.CAT_ID,id)
+                .putExtra(I.Boutique.TITLE,name));
     }
 }
