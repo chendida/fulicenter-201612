@@ -144,7 +144,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter{
             ButterKnife.bind(this, view);
         }
 
-        public void bind(int groupPosition, int childPosition) {
+        public void bind(final int groupPosition, int childPosition) {
             final CategoryChildBean categoryChildBean = getChild(groupPosition, childPosition);
             if (categoryChildBean != null) {
                 ImageLoader.downloadImg(context, ivChild, categoryChildBean.getImageUrl());
@@ -152,7 +152,8 @@ public class CategoryAdapter extends BaseExpandableListAdapter{
                 mLayoutCategoryChild.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MFGT.gotoCategoryChild(context,categoryChildBean.getId(),categoryChildBean.getName());
+                        MFGT.gotoCategoryChild(context,categoryChildBean.getId(),
+                                getGroup(groupPosition).getName());
                     }
                 });
             }
