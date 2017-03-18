@@ -34,7 +34,7 @@ public class CatFilterCategoryButton extends Button{
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isExpand){
+                if (isExpand){//点击时判断PopupWindow的状态是否展开，是展开的话就隐藏，否则展开
                     L.e(TAG,"setOnClickListener" + isExpand+"1111");
                     if (mPopupWindow != null && mPopupWindow.isShowing()){
                         mPopupWindow.dismiss();
