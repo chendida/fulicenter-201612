@@ -17,26 +17,32 @@
     </RelativeLayout>
 
     <EditText
+        android:id="@+id/et_UserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="用户名："
+        android:hint="用户名："
         android:drawableRight="@drawable/icon_account"/>
 
     <EditText
+        android:id="@+id/et_Nick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="昵称："
+        android:hint="昵称："
         android:drawableRight="@drawable/icon_account"/>
     <EditText
+        android:id="@+id/et_Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="密码："
+        android:hint="密码："
+        android:inputType="textPassword"
         android:drawableRight="@drawable/icon_pwd"/>
     <EditText
+        android:id="@+id/et_Config_Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="确认密码："
+        android:hint="确认密码："
+        android:inputType="textPassword"
         android:drawableRight="@drawable/icon_pwd"/>
     <EditText
         android:id="@+id/ivAvatar"
