@@ -1,6 +1,7 @@
 package cn.ucai.fulicenter.ui.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -111,6 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerSuccess() {
+        setResult(RESULT_OK,new Intent().putExtra(I.User.USER_NAME,userName));
         CommonUtils.showShortToast(R.string.register_success);
         MFGT.finish(RegisterActivity.this);
     }
