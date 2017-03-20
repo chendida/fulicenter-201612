@@ -6,11 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.I;
+import cn.ucai.fulicenter.model.bean.CategoryChildBean;
 import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
 import cn.ucai.fulicenter.ui.view.CatFilterCategoryButton;
 import cn.ucai.fulicenter.ui.view.MFGT;
@@ -25,6 +28,7 @@ public class CategoryChildPageActivity extends AppCompatActivity {
     @BindView(R.id.btn_sort_addtime)
     Button btnSortAddTime;
     String groupName;
+    ArrayList<CategoryChildBean>list;
     //自定义控件的申明
     @BindView(R.id.cat_filter)
     CatFilterCategoryButton catFilter;
@@ -39,11 +43,12 @@ public class CategoryChildPageActivity extends AppCompatActivity {
                 .add(R.id.fragment_container, mNewGoodsFragment)
                 .commit();
         groupName = getIntent().getStringExtra(I.CategoryGroup.NAME);
+        list = (ArrayList<CategoryChildBean>) getIntent().getSerializableExtra(I.CategoryChild.DATA);
         initView();
     }
 
     private void initView() {
-        catFilter.setText(groupName);
+        catFilter.initView(groupName,list);
     }
 
 

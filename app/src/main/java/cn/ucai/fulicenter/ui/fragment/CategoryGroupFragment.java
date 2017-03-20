@@ -39,7 +39,7 @@ public class CategoryGroupFragment extends Fragment {
     ICategoryModel model;
 
     List<CategoryGroupBean> mGroupList;
-    List<List<CategoryChildBean>> mChildList;
+    ArrayList<ArrayList<CategoryChildBean>> mChildList;
     CategoryAdapter mAdapter;
     int loadIndex = 0;
     @BindView(R.id.layout_tips)

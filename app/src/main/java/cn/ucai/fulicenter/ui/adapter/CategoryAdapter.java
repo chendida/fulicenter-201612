@@ -27,7 +27,7 @@ import cn.ucai.fulicenter.ui.view.MFGT;
 public class CategoryAdapter extends BaseExpandableListAdapter{
     Context context;
     List<CategoryGroupBean> groupList;
-    List<List<CategoryChildBean>> childList;
+    ArrayList<ArrayList<CategoryChildBean>> childList;
 
     public CategoryAdapter(Context context) {
         this.context = context;
@@ -108,7 +108,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter{
         return false;
     }
 
-    public void initData(List<CategoryGroupBean> mGroupList, List<List<CategoryChildBean>> mChildList) {
+    public void initData(List<CategoryGroupBean> mGroupList, ArrayList<ArrayList<CategoryChildBean>> mChildList) {
         groupList.addAll(mGroupList);
         childList.addAll(mChildList);
         notifyDataSetChanged();
@@ -153,7 +153,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter{
                     @Override
                     public void onClick(View v) {
                         MFGT.gotoCategoryChild(context,categoryChildBean.getId(),
-                                getGroup(groupPosition).getName());
+                                getGroup(groupPosition).getName(),childList.get(groupPosition));
                     }
                 });
             }

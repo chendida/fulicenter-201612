@@ -17,7 +17,9 @@ public class FlowIndicator extends View {
     int mFocus;//当前实心圆的颜色
     int mNormalColor;//非焦点实心圆的颜色
     int mFocusColor;//焦点实心圆的颜色
-    
+
+
+
     public FlowIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.FlowIndicator);
