@@ -3,6 +3,7 @@
     package="cn.ucai.fulicenter">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".application.FuLiCenterApplication"
         android:allowBackup="true"
@@ -20,7 +21,9 @@
         </activity>
         <activity android:name=".ui.activity.BoutiqueChildActivity" />
         <activity android:name=".ui.activity.GoodsDetailsActivity" />
-        <activity android:name=".ui.activity.CategoryChildPageActivity"></activity>
+        <activity android:name=".ui.activity.CategoryChildPageActivity" />
+        <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".ui.activity.RegisterActivity"></activity>
     </application>
 
 </manifest>

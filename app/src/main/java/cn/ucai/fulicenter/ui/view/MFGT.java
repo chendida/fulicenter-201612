@@ -13,7 +13,9 @@ import cn.ucai.fulicenter.model.bean.CategoryChildBean;
 import cn.ucai.fulicenter.ui.activity.BoutiqueChildActivity;
 import cn.ucai.fulicenter.ui.activity.CategoryChildPageActivity;
 import cn.ucai.fulicenter.ui.activity.GoodsDetailsActivity;
+import cn.ucai.fulicenter.ui.activity.LoginActivity;
 import cn.ucai.fulicenter.ui.activity.MainActivity;
+import cn.ucai.fulicenter.ui.activity.RegisterActivity;
 import cn.ucai.fulicenter.ui.activity.SplashActivity;
 
 /**
@@ -56,5 +58,13 @@ public class MFGT {
                 .putExtra(I.NewAndBoutiqueGoods.CAT_ID, id)
                 .putExtra(I.CategoryGroup.NAME, groupName)
                 .putExtra(I.CategoryChild.DATA, list));
+    }
+
+    public static void gotoLoginActivity(MainActivity activity) {
+        startActivity(activity,new Intent(activity,LoginActivity.class));
+    }
+
+    public static void gotoRegisterActivity(LoginActivity activity) {
+        startActivity(activity,new Intent(activity,RegisterActivity.class));
     }
 }
