@@ -16,7 +16,9 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.ui.fragment.BoutiqueFragment;
+import cn.ucai.fulicenter.ui.fragment.CartFragment;
 import cn.ucai.fulicenter.ui.fragment.CategoryGroupFragment;
+import cn.ucai.fulicenter.ui.fragment.MimeFragment;
 import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
 import cn.ucai.fulicenter.ui.view.MFGT;
 
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     NewGoodsFragment mNewGoodsFragment;
     BoutiqueFragment mBoutiqueFragment;
     CategoryGroupFragment mCategoryFragment;
+    CartFragment mCartFragment;
+    MimeFragment mMimeFragment;
     RadioButton[] radioButtons;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +58,12 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.fragment, mNewGoodsFragment)
                 .add(R.id.fragment, mBoutiqueFragment)
                 .add(R.id.fragment,mCategoryFragment)
+                .add(R.id.fragment,mCartFragment)
+                .add(R.id.fragment,mMimeFragment)
                 .hide(mCategoryFragment)
                 .hide(mBoutiqueFragment)
+                .hide(mCartFragment)
+                .hide(mMimeFragment)
                 .show(mNewGoodsFragment)
                 .commit();
     }
@@ -71,13 +79,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFragment() {
-        mFragments = new Fragment[3];
+        mFragments = new Fragment[5];
         mBoutiqueFragment = new BoutiqueFragment();
         mNewGoodsFragment = new NewGoodsFragment();
         mCategoryFragment = new CategoryGroupFragment();
+        mCartFragment = new CartFragment();
+        mMimeFragment = new MimeFragment();
         mFragments[0] = mNewGoodsFragment;
         mFragments[1] = mBoutiqueFragment;
         mFragments[2] = mCategoryFragment;
+        mFragments[3] = mCartFragment;
+        mFragments[4] = mMimeFragment;
     }
 
     @Override
