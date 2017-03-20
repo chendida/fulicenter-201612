@@ -32,7 +32,7 @@ public class CategoryChildPageActivity extends AppCompatActivity {
     //自定义控件的申明
     @BindView(R.id.cat_filter)
     CatFilterCategoryButton catFilter;
-
+    int current_catId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +50,7 @@ public class CategoryChildPageActivity extends AppCompatActivity {
     private void initView() {
         catFilter.initView(groupName,list);
     }
+
 
 
     @OnClick({R.id.btn_sort_price, R.id.btn_sort_addtime})
@@ -77,6 +78,14 @@ public class CategoryChildPageActivity extends AppCompatActivity {
     @OnClick(R.id.backClickArea)
     public void onClick() {
         MFGT.finish(CategoryChildPageActivity.this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (catFilter != null){
+            catFilter.realse();
+        }
     }
 }
 

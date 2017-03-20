@@ -53,6 +53,7 @@ public class NewGoodsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_goods, container, false);
         bind = ButterKnife.bind(this, view);
+
         return view;
     }
 

@@ -52,9 +52,9 @@ public class MFGT {
 
     public static void gotoCategoryChild(Context context, int id, String groupName,
                                          ArrayList<CategoryChildBean>list) {
-        startActivity((Activity) context,new Intent(context,CategoryChildPageActivity.class)
-                .putExtra(I.NewAndBoutiqueGoods.CAT_ID,id)
-                .putExtra(I.CategoryGroup.NAME,groupName)
-                .putExtra(I.CategoryChild.DATA,list));
+        startActivity((Activity) context, new Intent(context, CategoryChildPageActivity.class)
+                .putExtra(I.NewAndBoutiqueGoods.CAT_ID, id)
+                .putExtra(I.CategoryGroup.NAME, groupName)
+                .putExtra(I.CategoryChild.DATA, list));
     }
 }

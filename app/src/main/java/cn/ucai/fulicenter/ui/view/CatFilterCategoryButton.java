@@ -1,10 +1,11 @@
 package cn.ucai.fulicenter.ui.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,6 +14,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,10 +22,12 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.CategoryChildBean;
 import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.model.utils.L;
+import cn.ucai.fulicenter.ui.activity.CategoryChildPageActivity;
 
 
 /**
@@ -38,6 +42,7 @@ public class CatFilterCategoryButton extends Button {
     GridView gv;
     CatFilterAdapter mAdapter;
     ArrayList<CategoryChildBean> list;
+    String groupName;
     public CatFilterCategoryButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -84,14 +89,21 @@ public class CatFilterCategoryButton extends Button {
     }
 
     public void initView(String groupName, ArrayList<CategoryChildBean> list) {
-        if (groupName == null || list == null){
+        if (groupName == null || list == null) {
             CommonUtils.showShortToast("获取数据显示异常");
             return;
         }
+        this.groupName = groupName;
+        this.list = list;
         gv = new GridView(mContext);
         this.setText(groupName);
-        mAdapter = new CatFilterAdapter(mContext,list);
+        mAdapter = new CatFilterAdapter(mContext, list);
         gv.setAdapter(mAdapter);
+    }
+    public void realse(){
+        if (mPopupWindow != null){
+            mPopupWindow.dismiss();
+        }
     }
 
     class CatFilterAdapter extends BaseAdapter {
@@ -121,11 +133,11 @@ public class CatFilterCategoryButton extends Button {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             CatFilterHolder holder = null;
-            if (convertView==null) {
+            if (convertView == null) {
                 convertView = View.inflate(context, R.layout.cat_filter, null);
                 holder = new CatFilterHolder(convertView);
                 convertView.setTag(holder);
-            }else {
+            } else {
                 holder = (CatFilterHolder) convertView.getTag();
             }
             holder.bind(position);
@@ -137,15 +149,24 @@ public class CatFilterCategoryButton extends Button {
             ImageView ivCategoryChildThumb;
             @BindView(R.id.tvCategoryChildName)
             TextView tvCategoryChildName;
+            @BindView(R.id.layout_cat_filter)
+            RelativeLayout layoutCatFilter;
 
             CatFilterHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
             public void bind(int position) {
-                CategoryChildBean bean = list.get(position);
+                final CategoryChildBean bean = list.get(position);
                 tvCategoryChildName.setText(bean.getName());
-                ImageLoader.downloadImg(context,ivCategoryChildThumb,bean.getImageUrl());
+                ImageLoader.downloadImg(context, ivCategoryChildThumb, bean.getImageUrl());
+                layoutCatFilter.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MFGT.gotoCategoryChild(mContext, bean.getId(), groupName, list);
+                        MFGT.finish((Activity) mContext);
+                    }
+                });
             }
         }
     }
