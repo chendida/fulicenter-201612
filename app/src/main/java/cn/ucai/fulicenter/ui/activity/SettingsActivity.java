@@ -57,4 +57,9 @@ public class SettingsActivity extends AppCompatActivity {
         MFGT.finish(SettingsActivity.this);
         MFGT.gotoLoginActivity(SettingsActivity.this);
     }
+
+    @OnClick(R.id.update_nick)
+    public void updateNick() {
+        MFGT.gotoUpdateNickActivity(SettingsActivity.this,userName.getText().toString());
+    }
 }
