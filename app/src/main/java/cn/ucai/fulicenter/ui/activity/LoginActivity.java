@@ -17,6 +17,7 @@ import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.Result;
 import cn.ucai.fulicenter.model.bean.User;
+import cn.ucai.fulicenter.model.dao.UserDao;
 import cn.ucai.fulicenter.model.net.IUserRegister;
 import cn.ucai.fulicenter.model.net.OnCompleteListener;
 import cn.ucai.fulicenter.model.net.UserRegister;
@@ -100,10 +101,21 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void loginSuccess(User user) {
+    private void loginSuccess(final User user) {
+        Log.e(TAG,"loginSuccess,user = " + user.getMavatarSuffix());
         FuLiCenterApplication.setUser(user);
+        Log.e(TAG,"loginSuccess,user2 = " + user.getMavatarSuffix());
         CommonUtils.showShortToast(R.string.login_success);
-        SharePrefrenceUtils.getInstance().setUserName(userName);
+        SharePrefrenceUtils.getInstance().setUserName(user.getMuserName());//利用首选项保存用户名
+        Log.e(TAG,"loginSuccess,user 3= " + user.getMavatarSuffix());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean b = UserDao.getInstance(LoginActivity.this).saveUserInfo(user);
+                Log.e(TAG,"loginSuccess,b = " + b);
+            }
+        }).start();
+        MFGT.finish(LoginActivity.this);
     }
 
     private void showDialog() {
