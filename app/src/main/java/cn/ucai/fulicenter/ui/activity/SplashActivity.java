@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,9 +16,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.application.FuLiCenterApplication;
+import cn.ucai.fulicenter.model.bean.User;
+import cn.ucai.fulicenter.model.dao.UserDao;
+import cn.ucai.fulicenter.model.utils.SharePrefrenceUtils;
 import cn.ucai.fulicenter.ui.view.MFGT;
 
 public class SplashActivity extends AppCompatActivity {
+    private static final String TAG = SplashActivity.class.getSimpleName();
     int time = 1000;
     @BindView(R.id.tvTime)
     TextView tvTime;
@@ -38,6 +44,13 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                //将数据保存到内存中
+                String userName = SharePrefrenceUtils.getInstance().getUserName();
+                if (userName != null){
+                    User user = UserDao.getInstance(SplashActivity.this).getUserInfo(userName);
+                    Log.e(TAG,"SplashActivity,user = " + user);
+                    FuLiCenterApplication.setUser(user);
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
