@@ -23,6 +23,7 @@ import cn.ucai.fulicenter.model.net.UserRegister;
 import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.MD5;
 import cn.ucai.fulicenter.model.utils.ResultUtils;
+import cn.ucai.fulicenter.model.utils.SharePrefrenceUtils;
 import cn.ucai.fulicenter.ui.view.MFGT;
 
 public class LoginActivity extends AppCompatActivity {
@@ -102,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginSuccess(User user) {
         FuLiCenterApplication.setUser(user);
         CommonUtils.showShortToast(R.string.login_success);
+        SharePrefrenceUtils.getInstance().setUserName(userName);
     }
 
     private void showDialog() {
