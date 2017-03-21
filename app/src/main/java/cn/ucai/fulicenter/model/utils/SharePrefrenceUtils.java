@@ -34,7 +34,7 @@ public class SharePrefrenceUtils {
     public String getUserName(){
         return sharedPreferences.getString(SAVE_USERINFO_USERNAME,null);
     }
-    public void setUser(){
+    public void removeUser(){
         editor.remove(SAVE_USERINFO_USERNAME).commit();
     }
 }

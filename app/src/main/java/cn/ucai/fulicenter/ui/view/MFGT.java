@@ -63,8 +63,11 @@ public class MFGT {
     }
 
     public static void gotoLoginActivity(Activity activity) {
-        startActivity(activity,new Intent(activity,LoginActivity.class));
+        //startActivity(activity,new Intent(activity,LoginActivity.class));
+        startActivityForResult(activity,new Intent(activity,LoginActivity.class),
+                I.REQUEST_CODE_LOGIN);
     }
+
 
     public static void gotoRegisterActivity(LoginActivity activity) {
         startActivityForResult(activity,new Intent(activity,RegisterActivity.class),

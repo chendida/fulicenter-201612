@@ -11,6 +11,7 @@ import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.model.bean.User;
+import cn.ucai.fulicenter.model.dao.UserDao;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.ui.view.MFGT;
 
@@ -32,21 +33,28 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void initData() {
         User user = FuLiCenterApplication.getUser();
-        if (user != null){
+        if (user != null) {
             showUserInfo(user);
-        }else {
+        } else {
             back();//结束
         }
     }
 
     private void showUserInfo(User user) {
         userName.setText(user.getMuserName());
-        ImageLoader.downloadImg(SettingsActivity.this,ivUserProfileAvatar,user.getAvatar());
+        ImageLoader.downloadImg(SettingsActivity.this, ivUserProfileAvatar, user.getAvatar());
         userNick.setText(user.getMuserNick());
     }
 
     @OnClick(R.id.ivBack)
     public void back() {
         MFGT.finish(SettingsActivity.this);
+    }
+
+    @OnClick(R.id.btn_logout)
+    public void onClick() {
+        UserDao.getInstance(SettingsActivity.this).logout();
+        MFGT.finish(SettingsActivity.this);
+        MFGT.gotoLoginActivity(SettingsActivity.this);
     }
 }

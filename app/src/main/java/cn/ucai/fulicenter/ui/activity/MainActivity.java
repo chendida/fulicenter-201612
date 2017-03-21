@@ -1,5 +1,6 @@
 package cn.ucai.fulicenter.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -120,8 +121,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.rbPerson_Center:
                 if (FuLiCenterApplication.getUser() == null){
                     MFGT.gotoLoginActivity(MainActivity.this);
-                }else {
-                    index = 4;
                 }
                 break;
         }
@@ -135,16 +134,30 @@ public class MainActivity extends AppCompatActivity {
             if (!mFragments[index].isAdded()){//该fragment没有被添加过
                 ft.add(R.id.fragment,mFragments[index]);
             }
-            ft.show(mFragments[index]).commit();
+            ft.show(mFragments[index]).commitAllowingStateLoss();
             currentIndex = index;
         }
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.e(TAG,"index =" + index+ ",currentIndex" + currentIndex);
+        if (index == 4){
+            //退出登录
+            if (FuLiCenterApplication.getUser() == null){
+                index = 0;
+            }
+            setFragment();
+        }
         setRadioButton();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        index = data.getIntExtra("login_result", 0);
     }
 
     private void setRadioButton() {

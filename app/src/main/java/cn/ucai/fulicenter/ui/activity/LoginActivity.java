@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginSuccess(final User user) {
+        setResult(RESULT_OK,new Intent().putExtra("login_result",4));
         Log.e(TAG,"loginSuccess,user = " + user.getMavatarSuffix());
         FuLiCenterApplication.setUser(user);
         Log.e(TAG,"loginSuccess,user2 = " + user.getMavatarSuffix());
