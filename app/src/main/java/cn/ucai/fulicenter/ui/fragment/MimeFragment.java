@@ -73,6 +73,7 @@ public class MimeFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_setting:
+                MFGT.gotoSettings(getActivity());
                 break;
             case R.id.ll_avatar:
                 break;
