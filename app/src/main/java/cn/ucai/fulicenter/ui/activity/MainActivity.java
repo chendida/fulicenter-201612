@@ -2,6 +2,7 @@ package cn.ucai.fulicenter.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -58,12 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.fragment, mNewGoodsFragment)
                 .add(R.id.fragment, mBoutiqueFragment)
                 .add(R.id.fragment,mCategoryFragment)
-                .add(R.id.fragment,mCartFragment)
-                .add(R.id.fragment,mMimeFragment)
                 .hide(mCategoryFragment)
                 .hide(mBoutiqueFragment)
-                .hide(mCartFragment)
-                .hide(mMimeFragment)
                 .show(mNewGoodsFragment)
                 .commit();
     }
@@ -133,10 +130,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setFragment() {
         if (currentIndex != index){
-            getSupportFragmentManager().beginTransaction()
-                    .hide(mFragments[currentIndex])
-                    .show(mFragments[index])
-                    .commit();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.hide(mFragments[currentIndex]);
+            if (!mFragments[index].isAdded()){//该fragment没有被添加过
+                ft.add(R.id.fragment,mFragments[index]);
+            }
+            ft.show(mFragments[index]).commit();
             currentIndex = index;
         }
     }
