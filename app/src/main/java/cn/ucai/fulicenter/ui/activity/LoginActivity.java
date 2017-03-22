@@ -102,10 +102,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginSuccess(final User user) {
-        setResult(RESULT_OK,new Intent().putExtra("login_result",4));
-        Log.e(TAG,"loginSuccess,user = " + user.getMavatarSuffix());
+        setResult(RESULT_OK);
         FuLiCenterApplication.setUser(user);
-        Log.e(TAG,"loginSuccess,user2 = " + user.getMavatarSuffix());
         CommonUtils.showShortToast(R.string.login_success);
         SharePrefrenceUtils.getInstance().setUserName(user.getMuserName());//利用首选项保存用户名
         Log.e(TAG,"loginSuccess,user 3= " + user.getMavatarSuffix());
@@ -118,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
         }).start();
         MFGT.finish(LoginActivity.this);
     }
+
 
     private void showDialog() {
         dialog = new ProgressDialog(LoginActivity.this);

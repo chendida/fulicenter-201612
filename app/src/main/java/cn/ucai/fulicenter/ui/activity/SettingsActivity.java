@@ -10,6 +10,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
+import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.User;
 import cn.ucai.fulicenter.model.dao.UserDao;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
@@ -55,11 +56,17 @@ public class SettingsActivity extends AppCompatActivity {
     public void onClick() {
         UserDao.getInstance(SettingsActivity.this).logout();
         MFGT.finish(SettingsActivity.this);
-        MFGT.gotoLoginActivity(SettingsActivity.this);
+        MFGT.gotoLoginActivity(SettingsActivity.this, I.REQUEST_CODE_LOGIN);
     }
 
     @OnClick(R.id.update_nick)
     public void updateNick() {
-        MFGT.gotoUpdateNickActivity(SettingsActivity.this,userName.getText().toString());
+        MFGT.gotoUpdateNickActivity(SettingsActivity.this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 }

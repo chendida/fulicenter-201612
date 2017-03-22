@@ -16,6 +16,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
+import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.ui.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.ui.fragment.CartFragment;
@@ -113,14 +114,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.rbCart:
                 if (FuLiCenterApplication.getUser() == null){
                     Log.e(TAG,"goto"+index);
-                    MFGT.gotoLoginActivity(MainActivity.this);
+                    MFGT.gotoLoginActivity(MainActivity.this, I.REQUEST_CODE_LOGIN_FROM_CART);
                 }else {
                     index = 3;
                 }
                 break;
             case R.id.rbPerson_Center:
                 if (FuLiCenterApplication.getUser() == null){
-                    MFGT.gotoLoginActivity(MainActivity.this);
+                    MFGT.gotoLoginActivity(MainActivity.this,I.REQUEST_CODE_LOGIN);
+                }else {
+                    index = 4;
                 }
                 break;
         }
@@ -149,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
             if (FuLiCenterApplication.getUser() == null){
                 index = 0;
             }
+            currentIndex = index;
             setFragment();
         }
         setRadioButton();
@@ -157,7 +161,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        index = data.getIntExtra("login_result", 0);
+        if (resultCode == RESULT_OK){
+            //点击个人中心
+            if (requestCode == I.REQUEST_CODE_LOGIN){
+                index = 4;
+            }
+            //点击购物车
+            if (requestCode == I.REQUEST_CODE_LOGIN_FROM_CART){
+                index = 3;
+            }
+            setFragment();
+            setRadioButton();
+        }
     }
 
     private void setRadioButton() {

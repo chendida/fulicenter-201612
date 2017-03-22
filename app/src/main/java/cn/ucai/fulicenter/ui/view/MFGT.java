@@ -63,10 +63,8 @@ public class MFGT {
                 .putExtra(I.CategoryChild.DATA, list));
     }
 
-    public static void gotoLoginActivity(Activity activity) {
-        //startActivity(activity,new Intent(activity,LoginActivity.class));
-        startActivityForResult(activity,new Intent(activity,LoginActivity.class),
-                I.REQUEST_CODE_LOGIN);
+    public static void gotoLoginActivity(Activity activity,int requestCode) {
+        startActivityForResult(activity,new Intent(activity,LoginActivity.class), requestCode);
     }
 
 
@@ -83,8 +81,7 @@ public class MFGT {
         startActivity(activity,SettingsActivity.class);
     }
 
-    public static void gotoUpdateNickActivity(Activity activity,String userName) {
-        startActivity(activity,new Intent(activity,UpdateNickActivity.class)
-                .putExtra(I.User.USER_NAME,userName));
+    public static void gotoUpdateNickActivity(Activity activity) {
+        startActivity(activity,UpdateNickActivity.class);
     }
 }

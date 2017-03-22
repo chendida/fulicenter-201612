@@ -83,9 +83,7 @@ public class MimeFragment extends Fragment {
 
     private void initData() {
         user = FuLiCenterApplication.getUser();
-        if (user == null) {
-            MFGT.gotoLoginActivity(getActivity());
-        } else {
+        if (user != null) {
             showUserInfo();
         }
     }
