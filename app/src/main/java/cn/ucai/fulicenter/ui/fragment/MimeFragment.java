@@ -20,6 +20,7 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.model.bean.User;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
+import cn.ucai.fulicenter.ui.activity.SettingsActivity;
 import cn.ucai.fulicenter.ui.view.MFGT;
 
 /**
@@ -61,7 +62,8 @@ public class MimeFragment extends Fragment {
     private void showUserInfo() {
         Log.e(TAG,"showUserInfo()" + user.getMuserName());
         tvUsername.setText(user.getMuserName());
-        ImageLoader.downloadImg(getActivity(),ivAvatar,user.getAvatar());
+        //ImageLoader.downloadImg(getActivity(),ivAvatar,user.getAvatar());
+        ImageLoader.setAvatar(ImageLoader.getAvatarUrl(user),getActivity(),ivAvatar);
     }
 
     @OnClick({R.id.btn_setting, R.id.ll_avatar})
