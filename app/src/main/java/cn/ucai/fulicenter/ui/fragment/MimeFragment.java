@@ -55,12 +55,7 @@ public class MimeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        user = FuLiCenterApplication.getUser();
-        if (user == null) {
-            MFGT.gotoLoginActivity(getActivity());
-        } else {
-            showUserInfo();
-        }
+        initData();
     }
 
     private void showUserInfo() {
@@ -77,6 +72,21 @@ public class MimeFragment extends Fragment {
                 break;
             case R.id.ll_avatar:
                 break;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
+    private void initData() {
+        user = FuLiCenterApplication.getUser();
+        if (user == null) {
+            MFGT.gotoLoginActivity(getActivity());
+        } else {
+            showUserInfo();
         }
     }
 }
