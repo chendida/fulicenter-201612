@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,6 +101,9 @@ public class GoodsDetailsActivity extends AppCompatActivity {
                                 isCollect = action == I.ACTION_DELETE_COLLECT ? false : true;
                             }
                             setCollectStatus(isCollect);
+                            if (action != I.ACTION_COLLECT_IS_COLLECT) {
+                                CommonUtils.showShortToast(result.getMsg());
+                            }
                         }
 
                         @Override
