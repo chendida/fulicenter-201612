@@ -1,8 +1,11 @@
 package cn.ucai.fulicenter.application;
 
 import android.app.Application;
+import android.util.Log;
 
 import cn.ucai.fulicenter.model.bean.User;
+import cn.ucai.fulicenter.model.dao.UserDao;
+import cn.ucai.fulicenter.model.utils.SharePrefrenceUtils;
 
 /**
  * Created by Administrator on 2017/3/14.
@@ -23,6 +26,11 @@ public class FuLiCenterApplication extends Application {
     }
 
     public static User getUser() {
+        if (user == null){
+            String userName = SharePrefrenceUtils.getInstance().getUserName();
+            Log.e("application","userName =" + userName);
+            User user = UserDao.getInstance(instance).getUserInfo(userName);
+        }
         return user;
     }
 
