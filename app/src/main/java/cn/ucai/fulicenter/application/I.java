@@ -49,6 +49,8 @@ public interface I {
 
     /** 添加收藏*/
     int ACTION_ADD_COLLECT=1;
+    /** 是否已经收藏*/
+    int ACTION_COLLECT_IS_COLLECT =0;
     /** 取消收藏*/
     int ACTION_DELETE_COLLECT=2;
     

@@ -45,7 +45,8 @@ public class GoodsDetailsActivity extends AppCompatActivity {
     GoodsDetailsBean bean;
     @BindView(R.id.ivGoodCollect)
     ImageView ivGoodCollect;
-
+    boolean isCollect = false;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +63,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        user = FuLiCenterApplication.getUser();
         initData();
     }
 
@@ -83,31 +85,35 @@ public class GoodsDetailsActivity extends AppCompatActivity {
                         }
                     });
         }
-        loadCollectStatus();
+        loadCollectStatus(I.ACTION_COLLECT_IS_COLLECT);
     }
 
-    private void loadCollectStatus() {
-        User user = FuLiCenterApplication.getUser();
-        model.loadCollectStatus(GoodsDetailsActivity.this, goodsId, user.getMuserName(),
-                new OnCompleteListener<MessageBean>() {
-            @Override
-            public void onSuccess(MessageBean result) {
-                if (result != null && result.isSuccess()) {
-                    setCollectStatus(true);
-                } else {
-                    setCollectStatus(false);
-                }
-            }
+    private void loadCollectStatus(final int action) {
+        if (user != null) {
+            model.loadCollectAction(GoodsDetailsActivity.this, action, goodsId, user.getMuserName(),
+                    new OnCompleteListener<MessageBean>() {
+                        @Override
+                        public void onSuccess(MessageBean result) {
+                            if (result != null && result.isSuccess()) {
+                                isCollect = action == I.ACTION_DELETE_COLLECT ? false : true;
+                            }
+                            setCollectStatus(isCollect);
+                        }
 
-            @Override
-            public void onError(String error) {
-                setCollectStatus(false);
-            }
-        });
+                        @Override
+                        public void onError(String error) {
+                            if (action == I.ACTION_DELETE_COLLECT){
+                                isCollect = true;
+                            }
+                            setCollectStatus(isCollect);
+                        }
+                    });
+        }
+
     }
 
     private void setCollectStatus(boolean isCollect) {
-        ivGoodCollect.setImageResource(isCollect?R.mipmap.bg_collect_out:R.mipmap.bg_collect_in);
+        ivGoodCollect.setImageResource(isCollect ? R.mipmap.bg_collect_out : R.mipmap.bg_collect_in);
     }
 
     private void showDetails() {
@@ -144,5 +150,20 @@ public class GoodsDetailsActivity extends AppCompatActivity {
     @OnClick(R.id.ivBack)
     public void onClick() {
         MFGT.finish(GoodsDetailsActivity.this);
+    }
+
+    @OnClick(R.id.ivGoodCollect)
+    public void collectAction() {
+        if (user == null){//没有用户登录
+            MFGT.gotoLoginActivity(GoodsDetailsActivity.this,0);//跳转到登录界面
+        }else {//有用户登录
+            if (isCollect){//已收藏
+                //取消收藏
+                loadCollectStatus(I.ACTION_DELETE_COLLECT);
+            }else {
+                //添加收藏
+                loadCollectStatus(I.ACTION_ADD_COLLECT);
+            }
+        }
     }
 }
