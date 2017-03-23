@@ -1,15 +1,11 @@
-package cn.ucai.fulicenter.ui.fragment;
+package cn.ucai.fulicenter.ui.activity;
 
-
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,55 +13,54 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.application.I;
+import cn.ucai.fulicenter.model.bean.CollectBean;
 import cn.ucai.fulicenter.model.bean.NewGoodsBean;
-import cn.ucai.fulicenter.model.net.INewGoodsModel;
-import cn.ucai.fulicenter.model.net.NewGoodsModel;
+import cn.ucai.fulicenter.model.bean.User;
+import cn.ucai.fulicenter.model.net.IUserRegister;
 import cn.ucai.fulicenter.model.net.OnCompleteListener;
+import cn.ucai.fulicenter.model.net.UserRegister;
 import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.ConvertUtils;
 import cn.ucai.fulicenter.model.utils.L;
+import cn.ucai.fulicenter.ui.adapter.CollectGoodsAdapter;
 import cn.ucai.fulicenter.ui.adapter.NewGoodsAdapter;
+import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
+import cn.ucai.fulicenter.ui.view.MFGT;
 import cn.ucai.fulicenter.ui.view.SpaceItemDecoration;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class NewGoodsFragment extends Fragment {
-    private static final String TAG = NewGoodsFragment.class.getSimpleName();
-    INewGoodsModel model;
+public class CollectDetailsActivity extends AppCompatActivity {
+    private static final String TAG = CollectDetailsActivity.class.getSimpleName();
     @BindView(R.id.rv_NewGoods)
     RecyclerView rvNewGoods;
-    Unbinder bind;
-    int pageId = 1;
     GridLayoutManager gm;
-    NewGoodsAdapter mAdapter;
-    List<NewGoodsBean> mList = new ArrayList<>();
+    CollectGoodsAdapter mAdapter;
+    List<CollectBean> mList = new ArrayList<>();
     @BindView(R.id.tvFresh)
     TextView tvFresh;
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
-    int catId = 0;
+    @BindView(R.id.tvTitleName)
+    TextView tvTitleName;
+    IUserRegister userModel;
+    User user;
+    int pageId = 1;
+    Unbinder bind;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_new_goods, container, false);
-        bind = ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        model = new NewGoodsModel();
-        catId = getActivity().getIntent().getIntExtra(I.NewAndBoutiqueGoods.CAT_ID, catId);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_collect_details);
+        bind = ButterKnife.bind(this);
+        userModel = new UserRegister();
         initView();
         initData(I.ACTION_DOWNLOAD);
         setListener();
+        tvTitleName.setText("收藏宝贝");
     }
-
     private void setListener() {
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -96,7 +91,7 @@ public class NewGoodsFragment extends Fragment {
                 getResources().getColor(R.color.google_green),
                 getResources().getColor(R.color.google_red),
                 getResources().getColor(R.color.google_yellow));
-        gm = new GridLayoutManager(getContext(), I.COLUM_NUM);
+        gm = new GridLayoutManager(CollectDetailsActivity.this, I.COLUM_NUM);
         gm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -109,41 +104,12 @@ public class NewGoodsFragment extends Fragment {
         rvNewGoods.setLayoutManager(gm);
         rvNewGoods.setHasFixedSize(true);
 
-        mAdapter = new NewGoodsAdapter(getActivity(), mList);
+        mAdapter = new CollectGoodsAdapter(CollectDetailsActivity.this, mList);
         rvNewGoods.setAdapter(mAdapter);
 
         rvNewGoods.addItemDecoration(new SpaceItemDecoration(24));
     }
 
-    private void initData(final int action) {
-        model.loadData(getContext(),catId,pageId, new OnCompleteListener<NewGoodsBean[]>() {
-            @Override
-            public void onSuccess(NewGoodsBean[] result) {
-                setRefresh(false);
-                mAdapter.setIsMore(true);
-                L.e(TAG, "initData,result = " + result);
-                if (result != null && result.length > 0) {
-                    ArrayList<NewGoodsBean> list = ConvertUtils.array2List(result);
-                    if (action == I.ACTION_PULL_DOWN || action == I.ACTION_DOWNLOAD) {
-                        mList.clear();
-                    }
-                    mList.addAll(list);
-                    if (list.size() < I.PAGE_SIZE_DEFAULT){
-                        mAdapter.setIsMore(false);
-                    }
-                    mAdapter.notifyDataSetChanged();
-                }
-
-            }
-
-            @Override
-            public void onError(String error) {
-                L.e(TAG, "initData,error = " + error);
-                CommonUtils.showShortToast(error);
-                setRefresh(false);
-            }
-        });
-    }
 
     private void setRefresh(boolean refresh) {
         //防止数据加载失败出现空指针而加的保护判断
@@ -162,8 +128,43 @@ public class NewGoodsFragment extends Fragment {
             bind.unbind();
         }
     }
+    private void initData(final int action) {
+        user = FuLiCenterApplication.getUser();
+        if (user == null){
+            MFGT.finish(CollectDetailsActivity.this);
+            return;
+        }
+        userModel.loadCollectList(CollectDetailsActivity.this, user.getMuserName(), pageId
+                , I.PAGE_SIZE_DEFAULT, new OnCompleteListener<CollectBean[]>() {
+                    @Override
+                    public void onSuccess(CollectBean[] result) {
+                        setRefresh(false);
+                        mAdapter.setIsMore(true);
+                        L.e(TAG, "initData,result = " + result);
+                        if (result != null && result.length > 0) {
+                            ArrayList<CollectBean> list = ConvertUtils.array2List(result);
+                            if (action == I.ACTION_PULL_DOWN || action == I.ACTION_DOWNLOAD) {
+                                mList.clear();
+                            }
+                            mList.addAll(list);
+                            if (list.size() < I.PAGE_SIZE_DEFAULT) {
+                                mAdapter.setIsMore(false);
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
 
-    public void softBy(int softBy) {
-        mAdapter.setSoftBy(softBy);
+                    @Override
+                    public void onError(String error) {
+                        L.e(TAG, "initData,error = " + error);
+                        CommonUtils.showShortToast(error);
+                        setRefresh(false);
+                    }
+                });
+    }
+
+    @OnClick(R.id.ivBack)
+    public void onClick() {
+        MFGT.finish(CollectDetailsActivity.this);
     }
 }

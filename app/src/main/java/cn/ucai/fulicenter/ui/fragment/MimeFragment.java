@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
-import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.MessageBean;
 import cn.ucai.fulicenter.model.bean.User;
 import cn.ucai.fulicenter.model.net.IUserRegister;
@@ -75,13 +74,13 @@ public class MimeFragment extends Fragment {
     }
 
     private void loadCollectCount() {
-        Log.e(TAG,"Collect,onSuccess"+ 11111);
+        Log.e(TAG, "Collect,onSuccess" + 11111);
         IUserRegister userModel = new UserRegister();
         userModel.loadCollectCount(getActivity(), user.getMuserName(), new OnCompleteListener<MessageBean>() {
             @Override
             public void onSuccess(MessageBean result) {
                 if (result != null && result.isSuccess()) {
-                    Log.e(TAG,"Collect,onSuccess"+ result);
+                    Log.e(TAG, "Collect,onSuccess" + result);
                     collectGoodsNum.setText(result.getMsg());
                 } else {
                     collectGoodsNum.setText("0");
@@ -90,7 +89,7 @@ public class MimeFragment extends Fragment {
 
             @Override
             public void onError(String error) {
-                Log.e(TAG,"Collect,error"+ error);
+                Log.e(TAG, "Collect,error" + error);
                 collectGoodsNum.setText("0");
             }
         });
@@ -103,6 +102,7 @@ public class MimeFragment extends Fragment {
                 MFGT.gotoSettings(getActivity());
                 break;
             case R.id.ll_avatar:
+                MFGT.gotoSettings(getActivity());
                 break;
         }
     }
@@ -117,6 +117,13 @@ public class MimeFragment extends Fragment {
         user = FuLiCenterApplication.getUser();
         if (user != null) {
             showUserInfo();
+        }
+    }
+
+    @OnClick(R.id.collect_goods)
+    public void collectList() {
+        if (user != null){
+            MFGT.gotoCollectDetailsActivity(getActivity());
         }
     }
 }

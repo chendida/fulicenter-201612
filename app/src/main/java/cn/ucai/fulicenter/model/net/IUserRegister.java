@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.io.File;
 
+import cn.ucai.fulicenter.model.bean.CollectBean;
 import cn.ucai.fulicenter.model.bean.MessageBean;
 
 /**
@@ -22,4 +23,10 @@ public interface IUserRegister {
     加载用户收藏数量
      */
     void loadCollectCount(Context context,String userName, OnCompleteListener<MessageBean> listener);
+    /*
+    下载用户收藏商品列表
+     */
+    void loadCollectList(Context context,String userName,int pageId,int pageSize,
+                         OnCompleteListener<CollectBean[]> listener);
+
 }
