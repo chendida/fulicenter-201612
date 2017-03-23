@@ -55,11 +55,11 @@ public class CollectDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collect_details);
         bind = ButterKnife.bind(this);
-        userModel = new UserRegister();
+        /*userModel = new UserRegister();
         initView();
         initData(I.ACTION_DOWNLOAD);
         setListener();
-        tvTitleName.setText("收藏宝贝");
+        tvTitleName.setText("收藏宝贝");*/
     }
     private void setListener() {
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -85,7 +85,18 @@ public class CollectDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userModel = new UserRegister();
+        initView();
+        initData(I.ACTION_DOWNLOAD);
+        setListener();
+        tvTitleName.setText("收藏宝贝");
+    }
+
     private void initView() {
+        user = FuLiCenterApplication.getUser();
         srl.setColorSchemeColors(
                 getResources().getColor(R.color.google_blue),
                 getResources().getColor(R.color.google_green),
@@ -104,7 +115,7 @@ public class CollectDetailsActivity extends AppCompatActivity {
         rvNewGoods.setLayoutManager(gm);
         rvNewGoods.setHasFixedSize(true);
 
-        mAdapter = new CollectGoodsAdapter(CollectDetailsActivity.this, mList);
+        mAdapter = new CollectGoodsAdapter(CollectDetailsActivity.this, mList,user);
         rvNewGoods.setAdapter(mAdapter);
 
         rvNewGoods.addItemDecoration(new SpaceItemDecoration(24));
@@ -129,7 +140,6 @@ public class CollectDetailsActivity extends AppCompatActivity {
         }
     }
     private void initData(final int action) {
-        user = FuLiCenterApplication.getUser();
         if (user == null){
             MFGT.finish(CollectDetailsActivity.this);
             return;
