@@ -23,8 +23,10 @@ import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.ui.view.FlowIndicator;
 import cn.ucai.fulicenter.ui.view.MFGT;
 import cn.ucai.fulicenter.ui.view.SlideAutoLoopView;
+import cn.ucai.fulicenter.ui.view.utils.AntiShake;
 
 public class GoodsDetailsActivity extends AppCompatActivity {
+    AntiShake util = new AntiShake();
     IGoodsModel model;
     int goodsId = 0;
     @BindView(R.id.tvGoodEnglishName)
@@ -154,6 +156,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
 
     @OnClick(R.id.ivGoodCollect)
     public void collectAction() {
+        if (util.check()) return;//防止连续点击
         if (user == null){//没有用户登录
             MFGT.gotoLoginActivity(GoodsDetailsActivity.this,0);//跳转到登录界面
         }else {//有用户登录
