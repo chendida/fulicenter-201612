@@ -268,7 +268,7 @@ public class OnSetAvatarListener implements View.OnClickListener {
         intent.putExtra("outputX", outputX);
         intent.putExtra("outputY", outputY);
         intent.putExtra("return-data", true);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Environment.DIRECTORY_PICTURES);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         mActivity.startActivityForResult(intent, requestCode);
     }

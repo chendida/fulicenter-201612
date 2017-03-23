@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.io.File;
 
+import cn.ucai.fulicenter.model.bean.MessageBean;
+
 /**
  * Created by Administrator on 2017/3/20.
  */
@@ -16,4 +18,8 @@ public interface IUserRegister {
                   OnCompleteListener<String>listener);
     void updateAvatar(Context context,String userName,File file,
                     OnCompleteListener<String>listener);
+    /*
+    加载用户收藏数量
+     */
+    void loadCollectCount(Context context,String userName, OnCompleteListener<MessageBean> listener);
 }

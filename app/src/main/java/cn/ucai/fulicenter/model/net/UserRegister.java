@@ -5,6 +5,7 @@ import android.content.Context;
 import java.io.File;
 
 import cn.ucai.fulicenter.application.I;
+import cn.ucai.fulicenter.model.bean.MessageBean;
 import cn.ucai.fulicenter.model.utils.OkHttpUtils;
 
 /**
@@ -54,6 +55,15 @@ public class UserRegister implements IUserRegister {
                 .addFile2(file)
                 .targetClass(String.class)
                 .post()
+                .execute(listener);
+    }
+
+    @Override
+    public void loadCollectCount(Context context, String userName, OnCompleteListener<MessageBean> listener) {
+        OkHttpUtils<MessageBean>utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_FIND_COLLECT_COUNT)
+                .addParam(I.Collect.USER_NAME,userName)
+                .targetClass(MessageBean.class)
                 .execute(listener);
     }
 }

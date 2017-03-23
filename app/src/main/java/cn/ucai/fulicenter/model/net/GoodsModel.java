@@ -4,6 +4,7 @@ import android.content.Context;
 
 import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.GoodsDetailsBean;
+import cn.ucai.fulicenter.model.bean.MessageBean;
 import cn.ucai.fulicenter.model.utils.OkHttpUtils;
 
 /**

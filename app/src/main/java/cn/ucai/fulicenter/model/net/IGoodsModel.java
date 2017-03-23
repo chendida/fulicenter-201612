@@ -4,6 +4,7 @@ import android.content.Context;
 
 import cn.ucai.fulicenter.model.bean.BoutiqueBean;
 import cn.ucai.fulicenter.model.bean.GoodsDetailsBean;
+import cn.ucai.fulicenter.model.bean.MessageBean;
 
 /**
  * Created by Administrator on 2017/3/15.

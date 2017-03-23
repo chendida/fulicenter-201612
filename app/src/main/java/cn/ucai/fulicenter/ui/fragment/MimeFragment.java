@@ -18,9 +18,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
+import cn.ucai.fulicenter.application.I;
+import cn.ucai.fulicenter.model.bean.MessageBean;
 import cn.ucai.fulicenter.model.bean.User;
+import cn.ucai.fulicenter.model.net.IUserRegister;
+import cn.ucai.fulicenter.model.net.OnCompleteListener;
+import cn.ucai.fulicenter.model.net.UserRegister;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
-import cn.ucai.fulicenter.ui.activity.SettingsActivity;
 import cn.ucai.fulicenter.ui.view.MFGT;
 
 /**
@@ -40,6 +44,9 @@ public class MimeFragment extends Fragment {
     @BindView(R.id.tv_username)
     TextView tvUsername;
     User user;
+    @BindView(R.id.collect_goods_num)
+    TextView collectGoodsNum;
+
     public MimeFragment() {
         // Required empty public constructor
     }
@@ -60,10 +67,33 @@ public class MimeFragment extends Fragment {
     }
 
     private void showUserInfo() {
-        Log.e(TAG,"showUserInfo()" + user.getMuserName());
+        Log.e(TAG, "showUserInfo()" + user.getMuserName());
         tvUsername.setText(user.getMuserName());
         //ImageLoader.downloadImg(getActivity(),ivAvatar,user.getAvatar());
-        ImageLoader.setAvatar(ImageLoader.getAvatarUrl(user),getActivity(),ivAvatar);
+        ImageLoader.setAvatar(ImageLoader.getAvatarUrl(user), getActivity(), ivAvatar);
+        loadCollectCount();
+    }
+
+    private void loadCollectCount() {
+        Log.e(TAG,"Collect,onSuccess"+ 11111);
+        IUserRegister userModel = new UserRegister();
+        userModel.loadCollectCount(getActivity(), user.getMuserName(), new OnCompleteListener<MessageBean>() {
+            @Override
+            public void onSuccess(MessageBean result) {
+                if (result != null && result.isSuccess()) {
+                    Log.e(TAG,"Collect,onSuccess"+ result);
+                    collectGoodsNum.setText(result.getMsg());
+                } else {
+                    collectGoodsNum.setText("0");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e(TAG,"Collect,error"+ error);
+                collectGoodsNum.setText("0");
+            }
+        });
     }
 
     @OnClick({R.id.btn_setting, R.id.ll_avatar})
