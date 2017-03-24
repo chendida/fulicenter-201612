@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.model.bean.CartBean;
+import cn.ucai.fulicenter.model.bean.GoodsDetailsBean;
 import cn.ucai.fulicenter.model.bean.User;
 import cn.ucai.fulicenter.model.net.CartModel;
 import cn.ucai.fulicenter.model.net.ICartModel;
@@ -68,6 +70,11 @@ public class CartFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.e(TAG, "onActivityCreated");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         model = new CartModel();
         initView();
         initData();
@@ -75,6 +82,7 @@ public class CartFragment extends Fragment {
     }
 
     private void setListener() {
+        mAdapter.setListener(listener);
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -83,6 +91,17 @@ public class CartFragment extends Fragment {
             }
         });
     }
+
+    CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            Log.e(TAG,"onCheckedChanged,isChecked = " + isChecked);
+            int position = (int) buttonView.getTag();
+            Log.e(TAG,"onCheckedChanged,position = " + position);
+            mList.get(position).setChecked(isChecked);
+            setPriceText();
+        }
+    };
 
     private void setRefresh(boolean refresh) {
         srl.setRefreshing(refresh);
@@ -108,6 +127,7 @@ public class CartFragment extends Fragment {
         rv.setAdapter(mAdapter);
         rv.addItemDecoration(new SpaceItemDecoration(24));
         setCartListShow(false);
+        setPriceText();
     }
 
 
@@ -142,5 +162,28 @@ public class CartFragment extends Fragment {
                 setRefresh(false);
             }
         });
+    }
+    /*
+    计算购物车价钱
+     */
+    private void setPriceText(){
+        int sumPrice = 0;
+        int rankPrice = 0;
+        for (CartBean cart:mList) {
+            if (cart.isChecked()){
+                GoodsDetailsBean goods = cart.getGoods();
+                if (goods != null){
+                    sumPrice += getPrice(goods.getCurrencyPrice())*cart.getCount();
+                    rankPrice += getPrice(goods.getRankPrice()) * cart.getCount();
+                }
+            }
+        }
+        tvCartSumPrice.setText("合计：￥"+sumPrice);
+        tvCartSavePrice.setText("节省：￥" + (sumPrice - rankPrice));
+    }
+
+    private int getPrice(String p){
+        String price = p.substring(p.indexOf("￥") + 1);
+        return Integer.valueOf(price);
     }
 }
