@@ -55,11 +55,6 @@ public class CollectDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collect_details);
         bind = ButterKnife.bind(this);
-        /*userModel = new UserRegister();
-        initView();
-        initData(I.ACTION_DOWNLOAD);
-        setListener();
-        tvTitleName.setText("收藏宝贝");*/
     }
     private void setListener() {
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -160,6 +155,9 @@ public class CollectDetailsActivity extends AppCompatActivity {
                             if (list.size() < I.PAGE_SIZE_DEFAULT) {
                                 mAdapter.setIsMore(false);
                             }
+                            mAdapter.notifyDataSetChanged();
+                        }else if (result != null && result.length == 0 && pageId == 1){
+                            mList.clear();
                             mAdapter.notifyDataSetChanged();
                         }
                     }

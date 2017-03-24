@@ -141,28 +141,28 @@ public class CollectGoodsAdapter extends RecyclerView.Adapter {
             ivCollectDel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mList.remove(goods);
-                    loadCollectCount(goods.getGoodsId());
+                    loadCollectCount(goods,position);
                     Log.e(TAG,"delete,success"+goods.getGoodsId());
                     notifyDataSetChanged();
-                    Log.e(TAG,"delete,success");
+                    //Log.e(TAG,"delete,success");
                 }
             });
         }
     }
-
-    private void loadCollectCount(int goodsId) {
+    private void loadCollectCount(final CollectBean goods, final int position) {
         Log.e(TAG,"delete,success"+111);
         if (user != null){
             Log.e(TAG,"delete,success" + 222);
             model = new GoodsModel();
             Log.e(TAG,"delete,success");
-            model.loadCollectAction(mContext, I.ACTION_DELETE_COLLECT, goodsId, user.getMuserName()
+            model.loadCollectAction(mContext, I.ACTION_DELETE_COLLECT, goods.getGoodsId(),
+                    user.getMuserName()
                     , new OnCompleteListener<MessageBean>() {
                         @Override
                         public void onSuccess(MessageBean result) {
                             if (result != null && result.isSuccess()){
                                 Log.e(TAG,"delete,success");
+                                mList.remove(goods);
                                 CommonUtils.showShortToast("删除收藏成功");
                             }else {
                                 CommonUtils.showShortToast(R.string.delete_collect_fail);

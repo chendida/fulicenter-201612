@@ -105,7 +105,6 @@ public class GoodsDetailsActivity extends AppCompatActivity {
                                 CommonUtils.showShortToast(result.getMsg());
                             }
                         }
-
                         @Override
                         public void onError(String error) {
                             if (action == I.ACTION_DELETE_COLLECT){

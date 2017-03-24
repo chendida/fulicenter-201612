@@ -43,7 +43,7 @@ public class UserDao  {
         }
     }
     /*
-    清楚数据
+    清除数据
      */
     public void logout() {
         FuLiCenterApplication.setUser(null);//清除内存中的数据信息
