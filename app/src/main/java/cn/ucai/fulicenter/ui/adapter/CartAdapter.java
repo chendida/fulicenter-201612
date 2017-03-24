@@ -29,6 +29,7 @@ public class CartAdapter extends RecyclerView.Adapter {
     View.OnClickListener delListener;
     public void setDelListener(View.OnClickListener delListener) {
         this.delListener = delListener;
+        notifyDataSetChanged();
     }
 
     CompoundButton.OnCheckedChangeListener listener;
@@ -54,7 +55,6 @@ public class CartAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder parentHolder, int position) {
         CartViewHolder holder = (CartViewHolder) parentHolder;
-        //CartBean bean = mList.get(position);
         holder.bind(position);
     }
 

@@ -38,6 +38,8 @@ import cn.ucai.fulicenter.ui.view.MFGT;
 import cn.ucai.fulicenter.ui.view.SpaceItemDecoration;
 import cn.ucai.fulicenter.ui.view.utils.AntiShake;
 
+import static cn.ucai.fulicenter.R.attr.count;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -63,7 +65,7 @@ public class CartFragment extends Fragment {
     User user;
     @BindView(R.id.layout_cart)
     RelativeLayout layoutCart;
-
+    boolean isChecked = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -139,20 +141,52 @@ public class CartFragment extends Fragment {
         CartBean cart = mList.get(position);
         final int count = cart.getCount();
         if (count <= 1){
-            mList.remove(position);
-            mAdapter.notifyDataSetChanged();
+            delCart(position);//删除购物车
             return;
         }
         Log.e(TAG,"count = " + count);
+        updateCount(cart);//更新购物车
+    }
+
+    private void delCart(final int position) {
+        CartBean cart = mList.get(position);
+        model.cartAction(getActivity(), I.ACTION_CART_DEL, String.valueOf(cart.getId()),
+                String.valueOf(cart.getGoods().getGoodsId()), user.getMuserName(), 0,
+                new OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null && result.isSuccess()){
+                            mList.remove(position);
+                            mAdapter.notifyDataSetChanged();
+                            CommonUtils.showShortToast(R.string.cart_delete_success);
+                            mList.get(position).setChecked(isChecked);
+                            setPriceText();
+                        }else {
+                            CommonUtils.showShortToast(R.string.cart_delete_fail);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast(R.string.cart_delete_fail);
+                        Log.e(TAG,"onError,error = " +error);
+                    }
+                });
+    }
+
+    private void updateCount(final CartBean cart) {
         model.cartAction(getActivity(), I.ACTION_CART_UPDATA, String.valueOf(cart.getId())
                 , String.valueOf(cart.getGoods().getGoodsId()), user.getMuserName()
-                , (count - 1), new OnCompleteListener<MessageBean>() {
+                , (cart.getCount() - 1), new OnCompleteListener<MessageBean>() {
                     @Override
                     public void onSuccess(MessageBean result) {
                         if (result != null && result.isSuccess()){
                             CommonUtils.showShortToast(R.string.cart_update_success);
-                            mList.get(position).setCount(count - 1);
-                            mAdapter.notifyDataSetChanged();
+                            cart.setCount(cart.getCount()- 1);
+                            Log.e(TAG,"cart.getId() = " + cart.getId());
+                            cart.setChecked(isChecked);
+                            setPriceText();
+                            //mAdapter.notifyDataSetChanged();
                         }else {
                             CommonUtils.showShortToast(R.string.cart_update_fail);
                         }
@@ -176,6 +210,8 @@ public class CartFragment extends Fragment {
                         if (result != null && result.isSuccess()){
                             CommonUtils.showShortToast(R.string.cart_update_success);
                             mList.get(position).setCount(mList.get(position).getCount() + 1);
+                            mList.get(position).setChecked(isChecked);
+                            setPriceText();
                             mAdapter.notifyDataSetChanged();
                         }else {
                             CommonUtils.showShortToast(R.string.cart_update_fail);
@@ -193,7 +229,8 @@ public class CartFragment extends Fragment {
 
     CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
         @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        public void onCheckedChanged(CompoundButton buttonView, boolean checked) {
+            isChecked = checked;
             Log.e(TAG,"onCheckedChanged,isChecked = " + isChecked);
             int position = (int) buttonView.getTag();
             Log.e(TAG,"onCheckedChanged,position = " + position);
@@ -247,8 +284,10 @@ public class CartFragment extends Fragment {
                     mList.clear();
                     if (result.length > 0) {
                         ArrayList<CartBean> list = ConvertUtils.array2List(result);
-                        mList.addAll(list);
-                        mAdapter.notifyDataSetChanged();
+                        if (list != null && list.size() > 0) {
+                            mList.addAll(list);
+                            mAdapter.notifyDataSetChanged();
+                        }
                     }else {
                         setCartListShow(false);
                     }
