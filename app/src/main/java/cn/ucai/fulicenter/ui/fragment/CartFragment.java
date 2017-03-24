@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,15 +21,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
-import cn.ucai.fulicenter.model.bean.BoutiqueBean;
 import cn.ucai.fulicenter.model.bean.CartBean;
 import cn.ucai.fulicenter.model.bean.User;
 import cn.ucai.fulicenter.model.net.CartModel;
 import cn.ucai.fulicenter.model.net.ICartModel;
 import cn.ucai.fulicenter.model.net.OnCompleteListener;
-import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.ConvertUtils;
-import cn.ucai.fulicenter.ui.adapter.BoutiqueAdapter;
 import cn.ucai.fulicenter.ui.adapter.CartAdapter;
 import cn.ucai.fulicenter.ui.view.SpaceItemDecoration;
 
@@ -54,6 +52,9 @@ public class CartFragment extends Fragment {
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
     User user;
+    @BindView(R.id.layout_cart)
+    RelativeLayout layoutCart;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,6 +71,27 @@ public class CartFragment extends Fragment {
         model = new CartModel();
         initView();
         initData();
+        setListener();
+    }
+
+    private void setListener() {
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setRefresh(true);
+                initData();
+            }
+        });
+    }
+
+    private void setRefresh(boolean refresh) {
+        srl.setRefreshing(refresh);
+        tvFresh.setVisibility(refresh ? View.VISIBLE : View.GONE);
+    }
+
+    private void setCartListShow(boolean isShow) {
+        tvNothing.setVisibility(isShow ? View.GONE : View.VISIBLE);
+        layoutCart.setVisibility(isShow?View.VISIBLE:View.GONE);
     }
 
     private void initView() {
@@ -85,6 +107,7 @@ public class CartFragment extends Fragment {
         mAdapter = new CartAdapter(getContext(), mList);
         rv.setAdapter(mAdapter);
         rv.addItemDecoration(new SpaceItemDecoration(24));
+        setCartListShow(false);
     }
 
 
@@ -99,18 +122,24 @@ public class CartFragment extends Fragment {
         model.loadCastData(getActivity(), user.getMuserName(), new OnCompleteListener<CartBean[]>() {
             @Override
             public void onSuccess(CartBean[] result) {
-                if (result != null){
-                    if (result.length > 0){
+                setRefresh(false);
+                setCartListShow(true);
+                if (result != null) {
+                    mList.clear();
+                    if (result.length > 0) {
                         ArrayList<CartBean> list = ConvertUtils.array2List(result);
                         mList.addAll(list);
                         mAdapter.notifyDataSetChanged();
+                    }else {
+                        setCartListShow(false);
                     }
                 }
             }
 
             @Override
             public void onError(String error) {
-
+                Log.e(TAG, "onError,error = " + error);
+                setRefresh(false);
             }
         });
     }
