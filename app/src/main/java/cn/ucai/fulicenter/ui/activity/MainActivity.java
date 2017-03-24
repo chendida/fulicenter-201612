@@ -152,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
             if (FuLiCenterApplication.getUser() == null){
                 index = 0;
             }
-            currentIndex = index;
             setFragment();
         }
         setRadioButton();

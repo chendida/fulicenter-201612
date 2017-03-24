@@ -22,7 +22,7 @@ public interface I {
     int REQUEST_CODE_LOGIN = 102;
     int REQUEST_CODE_NICK = 103;
     int REQUEST_CODE_LOGIN_FROM_CART = 104;
-
+    int REQUEST_CODE_COLLECT = 105;
     /** BeeColud APP ID */
     String BEE_COLUD_APP_ID = "3539b590-4859-4128-87a3-5fb8b86b94f6";
     /** BeeColud APP Secret*/
@@ -71,6 +71,7 @@ public interface I {
         String KEY_GOODS = "goods";
         String KEY_CURRENCY_PRICE = "currency_price";
         String KEY_GOODS_ID = "goods_id";
+        String KEY_IS_COLLECT = "goods_is_collected";
         String KEY_GOODS_NAME = "goods_name";
         String KEY_ENGLISH_NAME = "english_name";
 
