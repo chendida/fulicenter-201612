@@ -22,21 +22,28 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
+import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.CartBean;
 import cn.ucai.fulicenter.model.bean.GoodsDetailsBean;
+import cn.ucai.fulicenter.model.bean.MessageBean;
 import cn.ucai.fulicenter.model.bean.User;
 import cn.ucai.fulicenter.model.net.CartModel;
 import cn.ucai.fulicenter.model.net.ICartModel;
 import cn.ucai.fulicenter.model.net.OnCompleteListener;
+import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.ConvertUtils;
+import cn.ucai.fulicenter.ui.activity.GoodsDetailsActivity;
 import cn.ucai.fulicenter.ui.adapter.CartAdapter;
+import cn.ucai.fulicenter.ui.view.MFGT;
 import cn.ucai.fulicenter.ui.view.SpaceItemDecoration;
+import cn.ucai.fulicenter.ui.view.utils.AntiShake;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CartFragment extends Fragment {
     private static final String TAG = CartFragment.class.getSimpleName();
+    AntiShake util = new AntiShake();
     ICartModel model;
     LinearLayoutManager gm;
     CartAdapter mAdapter;
@@ -83,6 +90,42 @@ public class CartFragment extends Fragment {
 
     private void setListener() {
         mAdapter.setListener(listener);
+        /*
+        购物车中点击更新添加商品
+         */
+        mAdapter.setAddListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = (int) v.getTag();
+                Log.e(TAG,"onCheckedChanged,goodsId = " +position);
+                if (util.check()) return;//防止连续点击
+                if (user == null) {//没有用户登录
+                    MFGT.gotoLoginActivity(getActivity(), 0);//跳转到登录界面
+                }else {
+                    updateCart(position);
+                }
+            }
+        });
+
+        /*
+        购物车中点击更新减少商品
+         */
+        mAdapter.setDelListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = (int) v.getTag();
+                Log.e(TAG,"onCheckedChanged,goodsId = " +position);
+                if (util.check()) return;//防止连续点击
+                if (user == null) {//没有用户登录
+                    MFGT.gotoLoginActivity(getActivity(), 0);//跳转到登录界面
+                }else {
+                    update_del_Cart(position);
+                }
+            }
+        });
+        /*
+        下拉刷新
+         */
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -91,6 +134,62 @@ public class CartFragment extends Fragment {
             }
         });
     }
+
+    private void update_del_Cart(final int position) {
+        CartBean cart = mList.get(position);
+        final int count = cart.getCount();
+        if (count <= 1){
+            mList.remove(position);
+            mAdapter.notifyDataSetChanged();
+            return;
+        }
+        Log.e(TAG,"count = " + count);
+        model.cartAction(getActivity(), I.ACTION_CART_UPDATA, String.valueOf(cart.getId())
+                , String.valueOf(cart.getGoods().getGoodsId()), user.getMuserName()
+                , (count - 1), new OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null && result.isSuccess()){
+                            CommonUtils.showShortToast(R.string.cart_update_success);
+                            mList.get(position).setCount(count - 1);
+                            mAdapter.notifyDataSetChanged();
+                        }else {
+                            CommonUtils.showShortToast(R.string.cart_update_fail);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast(R.string.cart_update_fail);
+                        Log.e(TAG,"onError,error = " +error);
+                    }
+                });
+    }
+
+    private void updateCart(final int position) {
+        CartBean cart = mList.get(position);
+        model.cartAction(getActivity(), I.ACTION_CART_UPDATA, String.valueOf(cart.getId())
+                , String.valueOf(cart.getGoods().getGoodsId()), user.getMuserName()
+                , (cart.getCount() + 1), new OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null && result.isSuccess()){
+                            CommonUtils.showShortToast(R.string.cart_update_success);
+                            mList.get(position).setCount(mList.get(position).getCount() + 1);
+                            mAdapter.notifyDataSetChanged();
+                        }else {
+                            CommonUtils.showShortToast(R.string.cart_update_fail);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast(R.string.cart_update_fail);
+                        Log.e(TAG,"onError,error = " +error);
+                    }
+                });
+    }
+
 
     CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
         @Override

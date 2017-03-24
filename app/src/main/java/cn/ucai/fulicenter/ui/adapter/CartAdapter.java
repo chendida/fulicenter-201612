@@ -25,12 +25,21 @@ import cn.ucai.fulicenter.model.utils.ImageLoader;
 public class CartAdapter extends RecyclerView.Adapter {
     Context mContext;
     List<CartBean> mList;
+    View.OnClickListener addListener;
+    View.OnClickListener delListener;
+    public void setDelListener(View.OnClickListener delListener) {
+        this.delListener = delListener;
+    }
+
+    CompoundButton.OnCheckedChangeListener listener;
 
     public void setListener(CompoundButton.OnCheckedChangeListener listener) {
         this.listener = listener;
     }
 
-    CompoundButton.OnCheckedChangeListener listener;
+    public void setAddListener(View.OnClickListener addListener) {
+        this.addListener = addListener;
+    }
 
     public CartAdapter(Context mContext, List<CartBean> mList) {
         this.mContext = mContext;
@@ -74,7 +83,6 @@ public class CartAdapter extends RecyclerView.Adapter {
             super(view);
             ButterKnife.bind(this, view);
         }
-
         public void bind(int position) {
             CartBean bean = mList.get(position);
             tvCartCount.setText("(" + bean.getCount()+")");
@@ -87,6 +95,11 @@ public class CartAdapter extends RecyclerView.Adapter {
             }
             cbCartSelected.setTag(position);
             cbCartSelected.setOnCheckedChangeListener(listener);
+            ivCartAdd.setOnClickListener(addListener);
+            ivCartAdd.setTag(position);
+            ivCartDel.setOnClickListener(delListener);
+            ivCartDel.setTag(position);
         }
     }
+
 }
