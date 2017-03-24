@@ -1,7 +1,9 @@
 package cn.ucai.fulicenter.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import cn.ucai.fulicenter.ui.view.SlideAutoLoopView;
 import cn.ucai.fulicenter.ui.view.utils.AntiShake;
 
 public class GoodsDetailsActivity extends AppCompatActivity {
+    private static final String TAG = GoodsDetailsActivity.class.getSimpleName();
     AntiShake util = new AntiShake();
     IGoodsModel model;
     int goodsId = 0;
@@ -151,10 +154,20 @@ public class GoodsDetailsActivity extends AppCompatActivity {
         return null;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backClick();
+    }
 
     @OnClick(R.id.ivBack)
-    public void onClick() {
+    public void backClick() {
+        Log.e(TAG,"Back_onClick()");
+        setResult(RESULT_OK,new Intent()
+                .putExtra(I.GoodsDetails.KEY_IS_COLLECT,isCollect)
+                .putExtra(I.GoodsDetails.KEY_GOODS_ID,goodsId));
         MFGT.finish(GoodsDetailsActivity.this);
+
     }
 
     @OnClick(R.id.ivGoodCollect)
@@ -171,5 +184,11 @@ public class GoodsDetailsActivity extends AppCompatActivity {
                 loadCollectStatus(I.ACTION_ADD_COLLECT);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG,"onDestroy()");
     }
 }

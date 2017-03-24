@@ -1,10 +1,12 @@
 package cn.ucai.fulicenter.ui.activity;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -90,6 +92,7 @@ public class CollectDetailsActivity extends AppCompatActivity {
         tvTitleName.setText("收藏宝贝");
     }
 
+
     private void initView() {
         user = FuLiCenterApplication.getUser();
         srl.setColorSchemeColors(
@@ -174,5 +177,19 @@ public class CollectDetailsActivity extends AppCompatActivity {
     @OnClick(R.id.ivBack)
     public void onClick() {
         MFGT.finish(CollectDetailsActivity.this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG,"onActivityResult, requestCode = " + requestCode +"resultCode" + resultCode);
+        if (resultCode == RESULT_OK && requestCode == I.REQUEST_CODE_COLLECT){
+            int goodsId = data.getIntExtra(I.GoodsDetails.KEY_GOODS_ID, 0);
+            boolean isCollected = data.getBooleanExtra(I.GoodsDetails.KEY_IS_COLLECT, true);
+            if (!isCollected){
+                mList.remove(new CollectBean(goodsId));
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }
