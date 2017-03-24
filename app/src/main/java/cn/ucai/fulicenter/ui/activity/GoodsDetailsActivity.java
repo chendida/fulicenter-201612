@@ -7,7 +7,6 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +18,9 @@ import cn.ucai.fulicenter.model.bean.AlbumsBean;
 import cn.ucai.fulicenter.model.bean.GoodsDetailsBean;
 import cn.ucai.fulicenter.model.bean.MessageBean;
 import cn.ucai.fulicenter.model.bean.User;
+import cn.ucai.fulicenter.model.net.CartModel;
 import cn.ucai.fulicenter.model.net.GoodsModel;
+import cn.ucai.fulicenter.model.net.ICartModel;
 import cn.ucai.fulicenter.model.net.IGoodsModel;
 import cn.ucai.fulicenter.model.net.OnCompleteListener;
 import cn.ucai.fulicenter.model.utils.CommonUtils;
@@ -32,6 +33,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
     private static final String TAG = GoodsDetailsActivity.class.getSimpleName();
     AntiShake util = new AntiShake();
     IGoodsModel model;
+    ICartModel cartModel;
     int goodsId = 0;
     @BindView(R.id.tvGoodEnglishName)
     TextView tvGoodEnglishName;
@@ -53,6 +55,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
     ImageView ivGoodCollect;
     boolean isCollect = false;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +67,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
             return;
         }
         model = new GoodsModel();
+        cartModel = new CartModel();
     }
 
     @Override
@@ -108,9 +112,10 @@ public class GoodsDetailsActivity extends AppCompatActivity {
                                 CommonUtils.showShortToast(result.getMsg());
                             }
                         }
+
                         @Override
                         public void onError(String error) {
-                            if (action == I.ACTION_DELETE_COLLECT){
+                            if (action == I.ACTION_DELETE_COLLECT) {
                                 isCollect = true;
                             }
                             setCollectStatus(isCollect);
@@ -162,10 +167,10 @@ public class GoodsDetailsActivity extends AppCompatActivity {
 
     @OnClick(R.id.ivBack)
     public void backClick() {
-        Log.e(TAG,"Back_onClick()");
-        setResult(RESULT_OK,new Intent()
-                .putExtra(I.GoodsDetails.KEY_IS_COLLECT,isCollect)
-                .putExtra(I.GoodsDetails.KEY_GOODS_ID,goodsId));
+        Log.e(TAG, "Back_onClick()");
+        setResult(RESULT_OK, new Intent()
+                .putExtra(I.GoodsDetails.KEY_IS_COLLECT, isCollect)
+                .putExtra(I.GoodsDetails.KEY_GOODS_ID, goodsId));
         MFGT.finish(GoodsDetailsActivity.this);
 
     }
@@ -173,13 +178,13 @@ public class GoodsDetailsActivity extends AppCompatActivity {
     @OnClick(R.id.ivGoodCollect)
     public void collectAction() {
         if (util.check()) return;//防止连续点击
-        if (user == null){//没有用户登录
-            MFGT.gotoLoginActivity(GoodsDetailsActivity.this,0);//跳转到登录界面
-        }else {//有用户登录
-            if (isCollect){//已收藏
+        if (user == null) {//没有用户登录
+            MFGT.gotoLoginActivity(GoodsDetailsActivity.this, 0);//跳转到登录界面
+        } else {//有用户登录
+            if (isCollect) {//已收藏
                 //取消收藏
                 loadCollectStatus(I.ACTION_DELETE_COLLECT);
-            }else {
+            } else {
                 //添加收藏
                 loadCollectStatus(I.ACTION_ADD_COLLECT);
             }
@@ -189,6 +194,37 @@ public class GoodsDetailsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e(TAG,"onDestroy()");
+        Log.e(TAG, "onDestroy()");
+    }
+
+    @OnClick(R.id.ivGoodCart)
+    public void addCartClick() {
+        if (util.check()) return;//防止连续点击
+        if (user == null) {//没有用户登录
+            MFGT.gotoLoginActivity(GoodsDetailsActivity.this, 0);//跳转到登录界面
+        }else {
+            addCart();
+        }
+    }
+
+    private void addCart() {
+        cartModel.cartAction(GoodsDetailsActivity.this, I.ACTION_CART_ADD, null,
+                String.valueOf(goodsId), user.getMuserName(),1, new OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null && result.isSuccess()){
+                            Log.e(TAG,"addCart,result =" + result + "");
+                            CommonUtils.showShortToast(R.string.add_goods_success);
+                        }else {
+                            CommonUtils.showShortToast(R.string.add_goods_fail);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast(R.string.add_goods_fail);
+                        Log.e(TAG,"addCart,error =" + error);
+                    }
+                });
     }
 }

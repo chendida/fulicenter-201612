@@ -1,11 +1,10 @@
-package cn.ucai.fulicenter.ui.activity;
+package cn.ucai.fulicenter.model.net;
 
 import android.content.Context;
 
 import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.CartBean;
 import cn.ucai.fulicenter.model.bean.MessageBean;
-import cn.ucai.fulicenter.model.net.OnCompleteListener;
 import cn.ucai.fulicenter.model.utils.OkHttpUtils;
 
 /**
@@ -17,7 +16,7 @@ public class CartModel implements ICartModel {
     public void loadCastData(Context context, String userName, OnCompleteListener<CartBean[]> listener) {
         OkHttpUtils<CartBean[]>utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_FIND_CARTS)
-                .addParam(I.User.USER_NAME,userName)
+                .addParam(I.Cart.USER_NAME,userName)
                 .targetClass(CartBean[].class)
                 .execute(listener);
     }
@@ -40,7 +39,7 @@ public class CartModel implements ICartModel {
     private void addCart(OkHttpUtils<MessageBean> utils, String userName, String goodsId,
                          OnCompleteListener<MessageBean> listener) {
         utils.setRequestUrl(I.REQUEST_ADD_CART)
-                .addParam(I.User.USER_NAME,userName)
+                .addParam(I.Cart.USER_NAME,userName)
                 .addParam(I.Goods.KEY_GOODS_ID,goodsId)
                 .addParam(I.Cart.COUNT,String.valueOf(1))
                 .addParam(I.Cart.IS_CHECKED,String.valueOf(0))
