@@ -23,6 +23,7 @@ public interface I {
     int REQUEST_CODE_NICK = 103;
     int REQUEST_CODE_LOGIN_FROM_CART = 104;
     int REQUEST_CODE_COLLECT = 105;
+    int REQUEST_CODE_ORDER = 105;
     /** BeeColud APP ID */
     String BEE_COLUD_APP_ID = "3539b590-4859-4128-87a3-5fb8b86b94f6";
     /** BeeColud APP Secret*/
