@@ -78,6 +78,7 @@ public class CartAdapter extends RecyclerView.Adapter {
             ButterKnife.bind(this, view);
         }
         public void bind(int position) {
+            cbCartSelected.setOnCheckedChangeListener(null);
             CartBean bean = mList.get(position);
             tvCartCount.setText("(" + bean.getCount()+")");
             cbCartSelected.setChecked(bean.isChecked());
