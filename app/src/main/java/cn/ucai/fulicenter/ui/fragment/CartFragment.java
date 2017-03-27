@@ -93,38 +93,9 @@ public class CartFragment extends Fragment {
     private void setListener() {
         mAdapter.setListener(listener);
         /*
-        购物车中点击更新添加商品
+        购物车中点击更新更新商品
          */
-        mAdapter.setAddListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = (int) v.getTag();
-                Log.e(TAG,"onCheckedChanged,goodsId = " +position);
-                if (util.check()) return;//防止连续点击
-                if (user == null) {//没有用户登录
-                    MFGT.gotoLoginActivity(getActivity(), 0);//跳转到登录界面
-                }else {
-                    updateCart(position);
-                }
-            }
-        });
-
-        /*
-        购物车中点击更新减少商品
-         */
-        mAdapter.setDelListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = (int) v.getTag();
-                Log.e(TAG,"onCheckedChanged,goodsId = " +position);
-                if (util.check()) return;//防止连续点击
-                if (user == null) {//没有用户登录
-                    MFGT.gotoLoginActivity(getActivity(), 0);//跳转到登录界面
-                }else {
-                    update_del_Cart(position);
-                }
-            }
-        });
+        mAdapter.setAddListener(updateListener);
         /*
         下拉刷新
          */
@@ -136,97 +107,65 @@ public class CartFragment extends Fragment {
             }
         });
     }
-
-    private void update_del_Cart(final int position) {
+    private void updateCart(final int position, final int count) {
         CartBean cart = mList.get(position);
-        final int count = cart.getCount();
-        if (count <= 1){
-            delCart(position);//删除购物车
-            return;
+        //if (cart != null) {
+            GoodsDetailsBean goods = cart.getGoods();
+        //}
+        int action = cart.getCount() + count == 0?I.ACTION_CART_DEL:I.ACTION_CART_UPDATA;
+        if (cart != null && goods != null) {
+            model.cartAction(getActivity(), action, String.valueOf(cart.getId())
+                    , String.valueOf(cart.getGoods().getGoodsId()), user.getMuserName()
+                    , (cart.getCount() + count), new OnCompleteListener<MessageBean>() {
+                        @Override
+                        public void onSuccess(MessageBean result) {
+                            if (result != null && result.isSuccess()) {
+                                updateCartListView(position,count);
+                            } else {
+                                CommonUtils.showShortToast(R.string.cart_update_fail);
+                            }
+                        }
+                        @Override
+                        public void onError(String error) {
+                            CommonUtils.showShortToast(R.string.cart_update_fail);
+                            Log.e(TAG, "onError,error = " + error);
+                        }
+                    });
         }
-        Log.e(TAG,"count = " + count);
-        updateCount(cart);//更新购物车
+    }
+    private void updateCartListView(int position, int count) {
+        if (mList.get(position).getCount() + count == 0){
+            mList.remove(position);
+            mAdapter.notifyItemRemoved(position);
+            mAdapter.notifyItemRangeChanged(position,mList.size() - position -1);
+        }else {
+            mList.get(position).setCount(mList.get(position).getCount() + count);
+            mAdapter.notifyItemChanged(position);
+        }
+        CommonUtils.showShortToast(R.string.cart_update_success);
+        setCartListShow(!mList.isEmpty());
+        setPriceText();
     }
 
-    private void delCart(final int position) {
-        CartBean cart = mList.get(position);
-        model.cartAction(getActivity(), I.ACTION_CART_DEL, String.valueOf(cart.getId()),
-                String.valueOf(cart.getGoods().getGoodsId()), user.getMuserName(), 0,
-                new OnCompleteListener<MessageBean>() {
-                    @Override
-                    public void onSuccess(MessageBean result) {
-                        if (result != null && result.isSuccess()){
-                            mList.remove(position);
-                            mAdapter.notifyDataSetChanged();
-                            CommonUtils.showShortToast(R.string.cart_delete_success);
-                            mList.get(position).setChecked(isChecked);
-                            setPriceText();
-                        }else {
-                            CommonUtils.showShortToast(R.string.cart_delete_fail);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        CommonUtils.showShortToast(R.string.cart_delete_fail);
-                        Log.e(TAG,"onError,error = " +error);
-                    }
-                });
-    }
-
-    private void updateCount(final CartBean cart) {
-        model.cartAction(getActivity(), I.ACTION_CART_UPDATA, String.valueOf(cart.getId())
-                , String.valueOf(cart.getGoods().getGoodsId()), user.getMuserName()
-                , (cart.getCount() - 1), new OnCompleteListener<MessageBean>() {
-                    @Override
-                    public void onSuccess(MessageBean result) {
-                        if (result != null && result.isSuccess()){
-                            CommonUtils.showShortToast(R.string.cart_update_success);
-                            cart.setCount(cart.getCount()- 1);
-                            Log.e(TAG,"cart.getId() = " + cart.getId());
-                            cart.setChecked(isChecked);
-                            setPriceText();
-                            //mAdapter.notifyDataSetChanged();
-                        }else {
-                            CommonUtils.showShortToast(R.string.cart_update_fail);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        CommonUtils.showShortToast(R.string.cart_update_fail);
-                        Log.e(TAG,"onError,error = " +error);
-                    }
-                });
-    }
-
-    private void updateCart(final int position) {
-        CartBean cart = mList.get(position);
-        model.cartAction(getActivity(), I.ACTION_CART_UPDATA, String.valueOf(cart.getId())
-                , String.valueOf(cart.getGoods().getGoodsId()), user.getMuserName()
-                , (cart.getCount() + 1), new OnCompleteListener<MessageBean>() {
-                    @Override
-                    public void onSuccess(MessageBean result) {
-                        if (result != null && result.isSuccess()){
-                            CommonUtils.showShortToast(R.string.cart_update_success);
-                            mList.get(position).setCount(mList.get(position).getCount() + 1);
-                            mList.get(position).setChecked(isChecked);
-                            setPriceText();
-                            mAdapter.notifyDataSetChanged();
-                        }else {
-                            CommonUtils.showShortToast(R.string.cart_update_fail);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        CommonUtils.showShortToast(R.string.cart_update_fail);
-                        Log.e(TAG,"onError,error = " +error);
-                    }
-                });
-    }
-
-
+    View.OnClickListener updateListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (util.check()) return;//防止连续点击
+            if (user == null) {//没有用户登录
+                MFGT.gotoLoginActivity(getActivity(), 0);//跳转到登录界面
+            }else {
+                int position = (int) v.getTag();
+                int count = 0;
+                Log.e(TAG,"updateAddListener,position = " +position);
+                if (v.getTag(R.id.action_add_cart)!= null){
+                    count = (int) v.getTag(R.id.action_add_cart);
+                }else if (v.getTag(R.id.action_del_ccart) != null){
+                    count = (int) v.getTag(R.id.action_del_ccart);
+                }
+                updateCart(position,count);
+            }
+        }
+    };
     CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean checked) {
@@ -279,6 +218,7 @@ public class CartFragment extends Fragment {
             @Override
             public void onSuccess(CartBean[] result) {
                 setRefresh(false);
+                setPriceText();
                 setCartListShow(true);
                 if (result != null) {
                     mList.clear();
@@ -287,9 +227,11 @@ public class CartFragment extends Fragment {
                         if (list != null && list.size() > 0) {
                             mList.addAll(list);
                             mAdapter.notifyDataSetChanged();
+                            setPriceText();
                         }
                     }else {
                         setCartListShow(false);
+                        setPriceText();
                     }
                 }
             }
@@ -298,6 +240,7 @@ public class CartFragment extends Fragment {
             public void onError(String error) {
                 Log.e(TAG, "onError,error = " + error);
                 setRefresh(false);
+                setPriceText();
             }
         });
     }
