@@ -276,7 +276,7 @@ public class CartFragment extends Fragment {
         if (sumPrice > 0){
             MFGT.gotoOrderActivity(getActivity(),sumPrice);
         }else {
-            //CommonUtils.showShortToast(R.string.s);
+            CommonUtils.showShortToast(R.string.order_nothing);
         }
     }
 }
