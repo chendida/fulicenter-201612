@@ -68,6 +68,14 @@
         <activity
             android:name="com.unionpay.uppay.PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize" />
+        <!-- 壹收款 -->
+        <activity
+            android:name="com.pingplusplus.libone.PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:theme="@android:style/Theme.Translucent"/>
+        <activity
+            android:name="com.pingplusplus.libone.PaySuccessActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"/>
     </application>
 
 </manifest>

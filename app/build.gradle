@@ -4,7 +4,6 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        multiDexEnabled true
         applicationId "cn.ucai.fulicenter"
         minSdkVersion 17
         targetSdkVersion 25
