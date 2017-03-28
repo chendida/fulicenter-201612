@@ -69,6 +69,7 @@ public class OrderActivity extends AppCompatActivity {
 
     private void initView() {
         tvTitleName.setText("填写收货地址");
+        tvOrderPrice.setText(String.valueOf(orderPrice));
     }
 
     @OnClick({R.id.ivBack, R.id.tv_order_buy})
